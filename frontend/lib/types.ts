@@ -23,10 +23,11 @@ export interface Store {
 
 export interface Product {
   product_id: string;
-  name: string;
+  name?: string;
+  product_name?: string;
   category: string;
-  brand: string;
-  base_price: number;
+  brand?: string;
+  base_price?: number;
   color?: string;
   size?: string;
 }

@@ -241,26 +241,27 @@ class BedrockClient:
         Returns:
             Dictionary with generated image data
         """
-        # Build the prompt
+        # Build the prompt - be VERY specific about the product
         prompt_parts = [
-            f"Create a {style} promotional {campaign_type} for SK Brands clothing store",
-            f"featuring {product_name}",
+            f"Professional product photography of {product_name}",
+            f"for a {campaign_type} campaign at SK Brands clothing store",
+            f"Focus ONLY on {product_name} - show the actual garment clearly",
         ]
 
         if occasion:
-            prompt_parts.append(f"for {occasion} celebration")
+            prompt_parts.append(f"styled for {occasion}")
 
         prompt_parts.extend(
             [
-                "Premium Indian retail aesthetic",
-                "Clean, elegant design with brand colors (navy blue and gold)",
-                "Professional photography style",
-                "Space for text overlay",
+                "Clean white or neutral background",
+                "High-quality studio lighting",
+                "Modern retail fashion photography style",
+                "Sharp focus on the clothing item",
             ]
         )
 
         if promotion_text:
-            prompt_parts.append(f"Include visual elements suggesting '{promotion_text}'")
+            prompt_parts.append(f"promotional theme: {promotion_text}")
 
         prompt = ". ".join(prompt_parts) + "."
 
@@ -270,11 +271,13 @@ class BedrockClient:
         )
 
         # Set dimensions based on campaign type
+        # Nova Canvas supports specific dimensions: 1024x1024, 1280x720, 1280x768, 768x768, etc.
         dimensions = {
-            "banner": (1456, 832),  # Wide banner
+            "banner": (1280, 720),  # Wide banner (16:9)
             "social": (1024, 1024),  # Square for Instagram
-            "email": (1024, 512),  # Email header
-            "whatsapp": (800, 800),  # WhatsApp share
+            "email": (1280, 768),  # Email header (5:3)
+            "whatsapp": (768, 768),  # WhatsApp share (square)
+            "promotional": (1024, 1024),  # Default promotional
         }
 
         width, height = dimensions.get(campaign_type, (1024, 1024))
@@ -285,7 +288,7 @@ class BedrockClient:
             width=width,
             height=height,
             quality="standard",
-            cfg_scale=10.0,
+            cfg_scale=8.0,  # Lower value for more creative freedom
         )
 
 

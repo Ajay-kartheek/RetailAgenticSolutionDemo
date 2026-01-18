@@ -33,19 +33,19 @@ const agents = [
   { id: 'campaign_agent', name: 'Brand Campaign', icon: Palette, color: 'text-pink-600', bg: 'bg-pink-100' },
 ];
 
-// Map stores to visual coordinates
+// Map stores to visual coordinates - adjusted to align with SVG outline
+// The SVG goes from about x:10-98, y:5-98 so dots need to match
 const STORE_COORDINATES: Record<string, { x: number; y: number }> = {
-  'STORE_CHN': { x: 80, y: 30 },
-  'STORE_CBE': { x: 35, y: 55 },
-  'STORE_MDU': { x: 50, y: 75 },
-  'STORE_TCH': { x: 55, y: 60 },
-  'STORE_SLM': { x: 40, y: 45 },
-  'STORE_TUT': { x: 60, y: 85 }, // If exists in mock
-  'STORE_VLR': { x: 60, y: 20 },
-  'STORE_TPR': { x: 30, y: 50 },
-  'STORE_TJV': { x: 65, y: 65 },
-  'STORE_ERD': { x: 32, y: 48 },
-  'STORE_NGL': { x: 45, y: 90 },
+  'STORE_CHN': { x: 88, y: 12 },   // Chennai - top right (coast)
+  'STORE_VLR': { x: 75, y: 18 },   // Vellore - upper right  
+  'STORE_SLM': { x: 50, y: 35 },   // Salem - north central
+  'STORE_ERD': { x: 35, y: 42 },   // Erode - west central  
+  'STORE_TPR': { x: 28, y: 48 },   // Tiruppur - west (near CBE)
+  'STORE_CBE': { x: 18, y: 52 },   // Coimbatore - far left (western border)
+  'STORE_TCH': { x: 55, y: 55 },   // Trichy - central
+  'STORE_TJV': { x: 68, y: 52 },   // Thanjavur - east central
+  'STORE_MDU': { x: 45, y: 72 },   // Madurai - south central
+  'STORE_NGL': { x: 30, y: 92 },   // Nagercoil - southern tip
 };
 
 
@@ -90,7 +90,7 @@ export default function Dashboard() {
 
         // Create product map
         const prodMap: Record<string, string> = {};
-        productsList.forEach(p => prodMap[p.product_id] = p.name);
+        productsList.forEach(p => prodMap[p.product_id] = p.name || p.product_name || p.product_id);
         setProducts(prodMap);
 
         // Map backend stores to UI format
@@ -308,10 +308,37 @@ export default function Dashboard() {
                   flex: 1,
                   minHeight: '400px',
                   position: 'relative',
-                  backgroundColor: '#f8fafc',
-                  backgroundImage: 'radial-gradient(circle, #cbd5e1 1.5px, transparent 1.5px)',
-                  backgroundSize: '20px 20px'
+                  backgroundColor: '#f0f9ff',
+                  overflow: 'hidden'
                 }}>
+                  {/* Tamil Nadu Outline SVG */}
+                  <svg
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      opacity: 0.15
+                    }}
+                  >
+                    {/* Simplified TN state outline path */}
+                    <path
+                      d="M95 5 L98 10 L96 18 L90 22 L85 28 L80 35 L75 40 L72 48 L75 55 L72 62 L68 68 L60 75 L50 82 L42 88 L35 95 L28 98 L22 95 L18 88 L15 78 L12 68 L10 55 L12 45 L15 38 L18 32 L25 25 L35 18 L48 12 L62 8 L78 5 Z"
+                      fill="#3b82f6"
+                      stroke="#2563eb"
+                      strokeWidth="1"
+                    />
+                  </svg>
+
+                  {/* City labels for context */}
+                  <div style={{ position: 'absolute', left: '90%', top: '9%', fontSize: '8px', color: '#475569', fontWeight: 600, transform: 'translateX(-50%)' }}>Chennai</div>
+                  <div style={{ position: 'absolute', left: '10%', top: '52%', fontSize: '8px', color: '#475569', fontWeight: 600 }}>Coimbatore</div>
+                  <div style={{ position: 'absolute', left: '45%', top: '76%', fontSize: '8px', color: '#475569', fontWeight: 600, transform: 'translateX(-50%)' }}>Madurai</div>
+                  <div style={{ position: 'absolute', left: '30%', top: '96%', fontSize: '8px', color: '#475569', fontWeight: 600, transform: 'translateX(-50%)' }}>Nagercoil</div>
+
+                  {/* Store pins */}
                   {stores.map(store => (
                     <button
                       key={store.id}

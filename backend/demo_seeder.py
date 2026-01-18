@@ -35,92 +35,142 @@ PRODUCTS = [
 ]
 
 # ============================================================================
-# SCENARIO 1: Winter Stock Crisis
-# Distributed across ALL stores
+# SCENARIO 1: Winter Stock Crisis (Minimal Data - Quick Demo)
+# Focus on a few critical situations
 # ============================================================================
 SCENARIO_1 = {
     "name": "Winter Stock Crisis",
-    "description": "Peak winter season causing stock volatility across all stores",
+    "description": "Peak winter season causing stock volatility - Minimal demo data",
     "store_configs": {
-        # Major stores with specific issues
+        # Tamil Nadu stores only
         "STORE_CHN": {"ws": 5, "lj": 45, "ck": 80, "dj": 35, "issue": "CRITICAL_LOW_SWEATERS"},
-        "STORE_BLR": {"ws": 120, "lj": 60, "ck": 200, "dj": 55, "issue": "OVERSTOCKED_KURTAS"},
-        "STORE_HYD": {"ws": 200, "lj": 150, "ck": 100, "dj": 80, "issue": "WELL_STOCKED_DONOR"},
-        "STORE_KCH": {"ws": 60, "lj": 5, "ck": 70, "dj": 50, "issue": "CRITICAL_LOW_JACKETS"},
-        "STORE_CBE": {"ws": 40, "lj": 35, "ck": 30, "dj": 0, "issue": "OUT_OF_STOCK_JEANS"},
-        "STORE_VZG": {"ws": 80, "lj": 70, "ck": 60, "dj": 120, "issue": "OVERSTOCKED_JEANS_DONOR"},
-        "STORE_MDU": {"ws": 40, "lj": 8, "ck": 65, "dj": 45, "issue": "LOW_JACKETS"},
-        "STORE_MYS": {"ws": 50, "lj": 40, "ck": 12, "dj": 40, "issue": "LOW_KURTAS"},
-        
-        # Other stores - balanced or minor issues
-        "STORE_TVM": {"ws": 50, "lj": 35, "ck": 50, "dj": 40},
-        "STORE_TRC": {"ws": 45, "lj": 30, "ck": 55, "dj": 38},
-        "STORE_SLM": {"ws": 55, "lj": 42, "ck": 48, "dj": 45},
-        "STORE_ERD": {"ws": 48, "lj": 38, "ck": 52, "dj": 42},
-        "STORE_TPR": {"ws": 52, "lj": 45, "ck": 60, "dj": 48},
-        "STORE_TJV": {"ws": 46, "lj": 36, "ck": 54, "dj": 44},
+        "STORE_CBE": {"ws": 120, "lj": 60, "ck": 200, "dj": 55, "issue": "OVERSTOCKED_KURTAS"},
+        "STORE_MDU": {"ws": 200, "lj": 150, "ck": 100, "dj": 80, "issue": "WELL_STOCKED_DONOR"},
+        "STORE_TCH": {"ws": 60, "lj": 5, "ck": 70, "dj": 50, "issue": "CRITICAL_LOW_JACKETS"},
+        "STORE_SLM": {"ws": 40, "lj": 35, "ck": 30, "dj": 0, "issue": "OUT_OF_STOCK_JEANS"},
+        "STORE_TPR": {"ws": 80, "lj": 70, "ck": 60, "dj": 120, "issue": "OVERSTOCKED_JEANS_DONOR"},
         "STORE_VLR": {"ws": 50, "lj": 40, "ck": 50, "dj": 46},
-        "STORE_NGL": {"ws": 48, "lj": 38, "ck": 52, "dj": 42},
-        "STORE_TCH": {"ws": 44, "lj": 34, "ck": 48, "dj": 40},
+        "STORE_TJV": {"ws": 46, "lj": 36, "ck": 54, "dj": 44},
+        "STORE_ERD": {"ws": 48, "lj": 38, "ck": 52, "dj": 42},
+        "STORE_NGL": {"ws": 44, "lj": 34, "ck": 48, "dj": 40},
     },
     "sales": [
-        # High demand patterns
         {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 25, "days_ago": 1},
         {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 22, "days_ago": 2},
-        {"store_id": "STORE_KCH", "product_id": "PROD_LJ002", "quantity": 18, "days_ago": 1},
-        {"store_id": "STORE_KCH", "product_id": "PROD_LJ002", "quantity": 20, "days_ago": 2},
-        {"store_id": "STORE_HYD", "product_id": "PROD_WS001", "quantity": 30, "days_ago": 1},
-        
-        # Slow moving
-        {"store_id": "STORE_BLR", "product_id": "PROD_CK003", "quantity": 2, "days_ago": 1},
+        {"store_id": "STORE_TCH", "product_id": "PROD_LJ002", "quantity": 18, "days_ago": 1},
+        {"store_id": "STORE_CBE", "product_id": "PROD_CK003", "quantity": 2, "days_ago": 1},
     ],
     "forecasts": [
         {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "forecasted_demand": 150, "confidence": 0.92},
-        {"store_id": "STORE_CBE", "product_id": "PROD_DJ004", "forecasted_demand": 120, "confidence": 0.89},
-        {"store_id": "STORE_KCH", "product_id": "PROD_LJ002", "forecasted_demand": 100, "confidence": 0.91},
-        {"store_id": "STORE_BLR", "product_id": "PROD_CK003", "forecasted_demand": 40, "confidence": 0.75},
-        {"store_id": "STORE_HYD", "product_id": "PROD_WS001", "forecasted_demand": 180, "confidence": 0.88},
+        {"store_id": "STORE_SLM", "product_id": "PROD_DJ004", "forecasted_demand": 120, "confidence": 0.89},
+        {"store_id": "STORE_TCH", "product_id": "PROD_LJ002", "forecasted_demand": 100, "confidence": 0.91},
     ],
 }
 
 # ============================================================================
-# SCENARIO 2: Spring Sales Opportunity
+# SCENARIO 2: Spring Sales Opportunity (Minimal Data)
+# Seasonal transition clearance
 # ============================================================================
 SCENARIO_2 = {
     "name": "Spring Sales Opportunity",
-    "description": "Transition to spring, clearing winter stock across all regions",
+    "description": "Transition to spring, clearing winter stock - Minimal demo data",
     "store_configs": {
-        # Spring clearance patterns
         "STORE_CHN": {"ws": 85, "lj": 70, "ck": 50, "dj": 40, "issue": "WINTER_CLEARANCE"},
-        "STORE_BLR": {"ws": 60, "lj": 55, "ck": 45, "dj": 38},
-        "STORE_VZG": {"ws": 40, "lj": 35, "ck": 60, "dj": 15, "issue": "HIGH_DENIM_DEMAND"},
-        "STORE_HYD": {"ws": 70, "lj": 60, "ck": 150, "dj": 80, "issue": "NEW_COLLECTION_PREP"},
-        "STORE_KCH": {"ws": 55, "lj": 40, "ck": 65, "dj": 50},
-        "STORE_MDU": {"ws": 45, "lj": 40, "ck": 55, "dj": 30},
-        "STORE_CBE": {"ws": 50, "lj": 45, "ck": 60, "dj": 42},
-        "STORE_MYS": {"ws": 48, "lj": 42, "ck": 40, "dj": 38},
-        
-        # Rest balanced
-        "STORE_TVM": {"ws": 52, "lj": 38, "ck": 58, "dj": 44},
-        "STORE_TRC": {"ws": 46, "lj": 36, "ck": 52, "dj": 38},
-        "STORE_SLM": {"ws": 50, "lj": 40, "ck": 55, "dj": 45},
-        "STORE_ERD": {"ws": 48, "lj": 38, "ck": 50, "dj": 42},
-        "STORE_TPR": {"ws": 52, "lj": 42, "ck": 58, "dj": 46},
-        "STORE_TJV": {"ws": 46, "lj": 36, "ck": 52, "dj": 40},
+        "STORE_CBE": {"ws": 60, "lj": 55, "ck": 45, "dj": 38},
+        "STORE_MDU": {"ws": 40, "lj": 35, "ck": 60, "dj": 15, "issue": "HIGH_DENIM_DEMAND"},
+        "STORE_TCH": {"ws": 70, "lj": 60, "ck": 150, "dj": 80, "issue": "NEW_COLLECTION_PREP"},
+        "STORE_SLM": {"ws": 55, "lj": 40, "ck": 65, "dj": 50},
+        "STORE_TPR": {"ws": 45, "lj": 40, "ck": 55, "dj": 30},
         "STORE_VLR": {"ws": 50, "lj": 40, "ck": 54, "dj": 44},
-        "STORE_NGL": {"ws": 48, "lj": 38, "ck": 50, "dj": 42},
-        "STORE_TCH": {"ws": 44, "lj": 34, "ck": 48, "dj": 38},
+        "STORE_TJV": {"ws": 46, "lj": 36, "ck": 52, "dj": 40},
+        "STORE_ERD": {"ws": 48, "lj": 38, "ck": 50, "dj": 42},
+        "STORE_NGL": {"ws": 52, "lj": 38, "ck": 58, "dj": 44},
     },
     "sales": [
-        {"store_id": "STORE_VZG", "product_id": "PROD_DJ004", "quantity": 18, "days_ago": 1},
-        {"store_id": "STORE_VZG", "product_id": "PROD_DJ004", "quantity": 22, "days_ago": 2},
+        {"store_id": "STORE_MDU", "product_id": "PROD_DJ004", "quantity": 18, "days_ago": 1},
+        {"store_id": "STORE_MDU", "product_id": "PROD_DJ004", "quantity": 22, "days_ago": 2},
         {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 2, "days_ago": 1},
-        {"store_id": "STORE_HYD", "product_id": "PROD_CK003", "quantity": 20, "days_ago": 1},
+        {"store_id": "STORE_TCH", "product_id": "PROD_CK003", "quantity": 20, "days_ago": 1},
     ],
     "forecasts": [
-        {"store_id": "STORE_VZG", "product_id": "PROD_DJ004", "forecasted_demand": 150, "confidence": 0.94},
+        {"store_id": "STORE_MDU", "product_id": "PROD_DJ004", "forecasted_demand": 150, "confidence": 0.94},
         {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "forecasted_demand": 15, "confidence": 0.80},
-        {"store_id": "STORE_HYD", "product_id": "PROD_CK003", "forecasted_demand": 200, "confidence": 0.92},
+        {"store_id": "STORE_TCH", "product_id": "PROD_CK003", "forecasted_demand": 200, "confidence": 0.92},
+    ],
+}
+
+# ============================================================================
+# SCENARIO 3: Full Retail Operations (Comprehensive Data)
+# More products, more sales, more forecasts - for thorough demo
+# ============================================================================
+SCENARIO_3 = {
+    "name": "Full Retail Operations",
+    "description": "Comprehensive scenario with rich data across all stores and products",
+    "store_configs": {
+        "STORE_CHN": {"ws": 15, "lj": 25, "ck": 180, "dj": 45, "issue": "LOW_WINTER_HIGH_TRADITIONAL"},
+        "STORE_CBE": {"ws": 90, "lj": 80, "ck": 55, "dj": 30, "issue": "BALANCED_WINTER"},
+        "STORE_MDU": {"ws": 35, "lj": 25, "ck": 200, "dj": 65, "issue": "HIGH_TRADITIONAL_DEMAND"},
+        "STORE_TCH": {"ws": 70, "lj": 65, "ck": 45, "dj": 40, "issue": "BALANCED"},
+        "STORE_SLM": {"ws": 8, "lj": 12, "ck": 90, "dj": 100, "issue": "CRITICAL_WINTER_LOW"},
+        "STORE_TPR": {"ws": 150, "lj": 120, "ck": 30, "dj": 25, "issue": "OVERSTOCKED_WINTER"},
+        "STORE_VLR": {"ws": 25, "lj": 20, "ck": 65, "dj": 5, "issue": "LOW_JEANS"},
+        "STORE_TJV": {"ws": 55, "lj": 50, "ck": 110, "dj": 85, "issue": "FESTIVE_READY"},
+        "STORE_ERD": {"ws": 40, "lj": 35, "ck": 75, "dj": 60},
+        "STORE_NGL": {"ws": 60, "lj": 55, "ck": 40, "dj": 35},
+    },
+    "sales": [
+        # Chennai - High demand for sweaters (sold out fast)
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 35, "days_ago": 1},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 40, "days_ago": 2},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 30, "days_ago": 3},
+        {"store_id": "STORE_CHN", "product_id": "PROD_LJ002", "quantity": 20, "days_ago": 1},
+        {"store_id": "STORE_CHN", "product_id": "PROD_CK003", "quantity": 15, "days_ago": 1},
+        
+        # Madurai - Strong traditional wear demand (temple city)
+        {"store_id": "STORE_MDU", "product_id": "PROD_CK003", "quantity": 45, "days_ago": 1},
+        {"store_id": "STORE_MDU", "product_id": "PROD_CK003", "quantity": 50, "days_ago": 2},
+        {"store_id": "STORE_MDU", "product_id": "PROD_DJ004", "quantity": 25, "days_ago": 1},
+        
+        # Salem - Running out of winter stock
+        {"store_id": "STORE_SLM", "product_id": "PROD_WS001", "quantity": 28, "days_ago": 1},
+        {"store_id": "STORE_SLM", "product_id": "PROD_LJ002", "quantity": 22, "days_ago": 1},
+        
+        # Vellore - Student demand for jeans (VIT nearby)
+        {"store_id": "STORE_VLR", "product_id": "PROD_DJ004", "quantity": 32, "days_ago": 1},
+        {"store_id": "STORE_VLR", "product_id": "PROD_DJ004", "quantity": 28, "days_ago": 2},
+        
+        # Tiruppur - Slow winter sales (local competition)
+        {"store_id": "STORE_TPR", "product_id": "PROD_WS001", "quantity": 3, "days_ago": 1},
+        {"store_id": "STORE_TPR", "product_id": "PROD_LJ002", "quantity": 2, "days_ago": 1},
+        
+        # Thanjavur - Festive demand surge
+        {"store_id": "STORE_TJV", "product_id": "PROD_CK003", "quantity": 35, "days_ago": 1},
+        {"store_id": "STORE_TJV", "product_id": "PROD_CK003", "quantity": 30, "days_ago": 2},
+        
+        # Coimbatore - Steady corporate sales
+        {"store_id": "STORE_CBE", "product_id": "PROD_LJ002", "quantity": 18, "days_ago": 1},
+        {"store_id": "STORE_CBE", "product_id": "PROD_DJ004", "quantity": 15, "days_ago": 1},
+    ],
+    "forecasts": [
+        # Critical needs
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "forecasted_demand": 200, "confidence": 0.95},
+        {"store_id": "STORE_CHN", "product_id": "PROD_LJ002", "forecasted_demand": 150, "confidence": 0.92},
+        {"store_id": "STORE_SLM", "product_id": "PROD_WS001", "forecasted_demand": 100, "confidence": 0.90},
+        {"store_id": "STORE_SLM", "product_id": "PROD_LJ002", "forecasted_demand": 80, "confidence": 0.88},
+        {"store_id": "STORE_VLR", "product_id": "PROD_DJ004", "forecasted_demand": 120, "confidence": 0.93},
+        
+        # Traditional wear for temples/festivals
+        {"store_id": "STORE_MDU", "product_id": "PROD_CK003", "forecasted_demand": 250, "confidence": 0.96},
+        {"store_id": "STORE_TJV", "product_id": "PROD_CK003", "forecasted_demand": 180, "confidence": 0.91},
+        
+        # Low demand (overstock situations)
+        {"store_id": "STORE_TPR", "product_id": "PROD_WS001", "forecasted_demand": 20, "confidence": 0.85},
+        {"store_id": "STORE_TPR", "product_id": "PROD_LJ002", "forecasted_demand": 15, "confidence": 0.82},
+        
+        # Balanced stores
+        {"store_id": "STORE_TCH", "product_id": "PROD_WS001", "forecasted_demand": 70, "confidence": 0.88},
+        {"store_id": "STORE_CBE", "product_id": "PROD_LJ002", "forecasted_demand": 90, "confidence": 0.90},
+        {"store_id": "STORE_ERD", "product_id": "PROD_CK003", "forecasted_demand": 85, "confidence": 0.87},
     ],
 }
 
@@ -289,7 +339,8 @@ def clear_all_data():
 
 def seed_scenario(scenario_num: int):
     """Seed a specific demo scenario."""
-    scenario = SCENARIO_1 if scenario_num == 1 else SCENARIO_2
+    scenarios = {1: SCENARIO_1, 2: SCENARIO_2, 3: SCENARIO_3}
+    scenario = scenarios.get(scenario_num, SCENARIO_1)
     
     print(f"\n{'='*60}")
     print(f"🎬 DEMO SCENARIO {scenario_num}: {scenario['name']}")
@@ -322,7 +373,7 @@ def seed_scenario(scenario_num: int):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Demo Data Seeder for SK Brands Retail AI")
-    parser.add_argument("--scenario", type=int, choices=[1, 2], help="Scenario to seed (1 or 2)")
+    parser.add_argument("--scenario", type=int, choices=[1, 2, 3], help="Scenario to seed (1, 2, or 3)")
     parser.add_argument("--clear", action="store_true", help="Clear all demo data")
     
     args = parser.parse_args()
@@ -335,9 +386,12 @@ if __name__ == "__main__":
     else:
         print(__doc__)
         print("\nAvailable scenarios:")
-        print("  1 - Winter Stock Crisis: Critical shortages across stores")
-        print("  2 - Spring Sales Opportunity: Seasonal transitions")
+        print("  1 - Winter Stock Crisis: Critical shortages (minimal data)")
+        print("  2 - Spring Sales Opportunity: Seasonal transitions (minimal data)")
+        print("  3 - Full Retail Operations: Comprehensive data for thorough demo")
         print("\nExamples:")
         print("  python demo_seeder.py --scenario 1")
         print("  python demo_seeder.py --scenario 2")
+        print("  python demo_seeder.py --scenario 3")
         print("  python demo_seeder.py --clear")
+

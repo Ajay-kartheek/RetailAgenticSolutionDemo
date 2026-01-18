@@ -218,7 +218,7 @@ Provide:
 
                 decision_record = {
                     "decision_id": decision_id,
-                    "status": "pending" if plan.get("requires_approval") else "approved",
+                    "status": "pending_approval" if plan.get("requires_approval") else "approved",
                     "timestamp": datetime.utcnow().isoformat(),
                     "decision_type": "replenishment_" + (plan.get("action_type") or "unknown"),
                     "agent_id": self.agent_id,

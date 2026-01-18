@@ -47,19 +47,25 @@ async def generate_campaign_image(request: ImageGenerationRequest):
 
     try:
         logger.info(f"Generating campaign image for product {request.product_id}")
+        
+        # Get product name with fallback
+        product_name = product.get("name") or product.get("product_name") or "Clothing Product"
+        product_category = product.get("category", "")
+        
+        # Build more specific product description
+        full_product_desc = f"{product_name} ({product_category})" if product_category else product_name
 
         result = bedrock.generate_campaign_image(
-            product_name=product.get("name", "Product"),
+            product_name=full_product_desc,
             campaign_type=request.campaign_type,
             promotion_text=request.promotion_text,
-            style=request.style,
-            product_category=product.get("category"),
-            product_color=product.get("color")
+            style=request.style
         )
 
         return {
             "product_id": request.product_id,
-            "product_name": product.get("name"),
+            "product_name": product_name,
+            "product_category": product_category,
             "campaign_type": request.campaign_type,
             "image_base64": result.get("image_base64"),
             "prompt_used": result.get("prompt")
@@ -100,15 +106,15 @@ async def create_campaign(request: CampaignRequest):
 
 
 @router.get("/suggestions")
-async def get_campaign_suggestions():
+async def get_campaign_suggestions_route():
     """
     Get AI-suggested campaigns based on current inventory and trends.
-    Uses the Campaign Agent to analyze data and suggest campaigns.
+    Uses the campaign agent tools to suggest campaigns.
     """
     try:
-        campaign_agent = CampaignAgent()
-        suggestions = campaign_agent.get_suggestions()
-        return {"suggestions": suggestions}
+        from agents.campaign_agent.tools import get_campaign_suggestions
+        suggestions = get_campaign_suggestions()
+        return {"suggestions": suggestions.get("suggestions", [])}
 
     except Exception as e:
         logger.error(f"Failed to get campaign suggestions: {e}", exc_info=True)
@@ -147,3 +153,165 @@ async def list_campaign_types():
             }
         ]
     }
+
+
+@router.post("/analyze/stream")
+async def analyze_campaigns_stream():
+    """
+    Run AI-powered campaign analysis with SSE streaming.
+    
+    This triggers the Campaign Agent with real data:
+    - Gets pricing recommendations from database
+    - Gets trend analysis data
+    - Uses Claude to generate intelligent campaign suggestions
+    - Streams progress updates via SSE
+    """
+    import asyncio
+    import uuid
+    import json
+    from fastapi.responses import StreamingResponse
+    from config.settings import settings
+    from config.aws import get_dynamodb_resource
+    
+    run_id = str(uuid.uuid4())[:8]
+    
+    async def generate():
+        try:
+            # Start event
+            yield f"data: {json.dumps({'type': 'start', 'run_id': run_id, 'agent_name': 'Orchestrator', 'message': 'Initializing campaign analysis...'})}\n\n"
+            await asyncio.sleep(0.3)
+            
+            # Delegate to Campaign Agent
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Orchestrator', 'message': 'Delegating to Campaign Agent...', 'status': 'running'})}\n\n"
+            await asyncio.sleep(0.5)
+            
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': 'Fetching product catalog...', 'status': 'running'})}\n\n"
+            
+            # Get actual products data
+            dynamodb = get_dynamodb_resource()
+            products_table = dynamodb.Table(settings.products_table)
+            stores_table = dynamodb.Table(settings.stores_table)
+            inventory_table = dynamodb.Table(settings.inventory_table)
+            
+            products = []
+            stores = []
+            inventory_data = []
+            
+            try:
+                response = products_table.scan()
+                products = response.get("Items", [])
+            except Exception as e:
+                logger.warning(f"Failed to fetch products: {e}")
+            
+            await asyncio.sleep(0.3)
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': f'Found {len(products)} products in catalog', 'status': 'running'})}\n\n"
+            
+            # Get stores
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': 'Analyzing store network...', 'status': 'running'})}\n\n"
+            
+            try:
+                response = stores_table.scan()
+                stores = response.get("Items", [])
+            except Exception as e:
+                logger.warning(f"Failed to fetch stores: {e}")
+            
+            await asyncio.sleep(0.3)
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': f'Found {len(stores)} stores across South India', 'status': 'running'})}\n\n"
+            
+            # Get inventory levels
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': 'Checking inventory levels...', 'status': 'running'})}\n\n"
+            
+            try:
+                response = inventory_table.scan()
+                inventory_data = response.get("Items", [])
+            except Exception as e:
+                logger.warning(f"Failed to fetch inventory: {e}")
+            
+            # Calculate inventory insights
+            high_stock = [i for i in inventory_data if int(i.get("quantity", 0)) > 50]
+            low_stock = [i for i in inventory_data if int(i.get("quantity", 0)) < 20]
+            
+            await asyncio.sleep(0.3)
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': f'Inventory: {len(high_stock)} high-stock, {len(low_stock)} low-stock items', 'status': 'running'})}\n\n"
+            
+            # Generate AI suggestions using Claude
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': 'Generating AI campaign recommendations...', 'thinking': 'Analyzing product mix, store network, and inventory levels...', 'status': 'running'})}\n\n"
+            
+            suggestions = []
+            
+            try:
+                from shared.bedrock import bedrock_client
+                
+                # Build rich context for Claude
+                product_summary = [{'name': p.get('name', p.get('product_name', 'Unknown')), 'category': p.get('category', 'Unknown')} for p in products[:6]]
+                store_cities = list(set([s.get('city', 'Unknown') for s in stores]))[:5]
+                
+                context = f"""
+You are a retail marketing strategist for SK Brands, a South Indian clothing retailer.
+
+Current Business Data:
+- Products: {len(products)} items including {product_summary}
+- Store Network: {len(stores)} stores in cities like {store_cities}
+- Inventory Status: {len(high_stock)} products with high stock (>50 units), {len(low_stock)} products with low stock (<20 units)
+- Season: January (post-holiday, pre-summer transition)
+
+Generate 2-3 strategic campaign recommendations. For each, provide:
+1. campaign_type: "clearance", "promotional", "seasonal", or "new_arrival"  
+2. title: Short, catchy campaign title
+3. description: 2-3 sentences explaining WHY this campaign makes sense based on the data
+4. expected_impact: "high", "medium", or "low" revenue potential
+5. target_products: List of product categories to target (e.g., ["Winterwear", "Traditional"])
+
+Respond in JSON format only:
+{{"suggestions": [...]}}
+"""
+                
+                response = bedrock_client.invoke_claude(
+                    prompt=context,
+                    system_prompt="You are a retail marketing AI. Respond only with valid JSON.",
+                    max_tokens=1000,
+                    temperature=0.7
+                )
+                
+                # Parse response
+                import re
+                json_match = re.search(r'\{.*\}', response, re.DOTALL)
+                if json_match:
+                    parsed = json.loads(json_match.group())
+                    suggestions = parsed.get("suggestions", [])
+                    
+            except Exception as e:
+                logger.error(f"Claude error: {e}")
+                # Fallback suggestions if Claude fails
+                suggestions = [
+                    {
+                        "campaign_type": "clearance",
+                        "title": "End-of-Season Clearance",
+                        "description": "Clear overstocked winter inventory before spring arrivals",
+                        "expected_impact": "high",
+                        "target_products": ["Winterwear", "Jackets"]
+                    }
+                ]
+            
+            await asyncio.sleep(0.5)
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Campaign Agent', 'message': f'Generated {len(suggestions)} campaign recommendations', 'status': 'completed'})}\n\n"
+            
+            # Orchestrator wrap up
+            yield f"data: {json.dumps({'type': 'progress', 'agent_name': 'Orchestrator', 'message': 'Campaign analysis complete!', 'status': 'completed'})}\n\n"
+            
+            # Final result
+            yield f"data: {json.dumps({'type': 'complete', 'suggestions': suggestions})}\n\n"
+            
+        except Exception as e:
+            logger.error(f"Campaign analysis failed: {e}", exc_info=True)
+            yield f"data: {json.dumps({'type': 'error', 'error': str(e)})}\n\n"
+    
+    return StreamingResponse(
+        generate(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive"
+        }
+    )
+
