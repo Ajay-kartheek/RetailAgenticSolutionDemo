@@ -1,0 +1,38 @@
+[project]
+name = "retail-agentic-ai"
+version = "0.1.0"
+description = "Multi-Agent Retail Intelligence Platform for SK Brands"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [
+    {name = "ShellKode", email = "contact@shellkode.com"}
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | __pycache__
+    | \.pytest_cache
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I", "N", "W", "UP"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

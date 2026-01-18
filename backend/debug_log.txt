@@ -1,0 +1,128 @@
+2026-01-18 04:19:21.964502: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 04:19:21.964510: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 04:19:46.232001: Raw LLM Response length: 4977
+2026-01-18 04:19:46.232013: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Analysis of Q1 2026 demand forecasts shows total forecasted demand of 6,378 units across all stores with 84% average forecast confidence. Coimbatore leads w
+2026-01-18 09:49:47.144607: Stored demand_agent for run RUN_20260118094649_223BD1
+2026-01-18 09:49:47.458965: Stored trend_agent for run RUN_20260118094649_223BD1
+2026-01-18 09:49:47.737589: Stored inventory_agent for run RUN_20260118094649_223BD1
+2026-01-18 09:49:48.075674: Stored replenishment_agent for run RUN_20260118094649_223BD1
+2026-01-18 09:49:48.383828: Stored pricing_agent for run RUN_20260118094649_223BD1
+2026-01-18 05:27:47.983353: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 05:27:47.983424: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 05:28:06.428945: Raw LLM Response length: 4150
+2026-01-18 05:28:06.428962: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 6,378 units across all stores with 84% average forecast confidence for Q1 2026",
+        "insights": [
+            "30 distinct p
+2026-01-18 10:58:07.341853: Stored demand_agent for run RUN_20260118105447_86F110
+2026-01-18 10:58:07.628931: Stored trend_agent for run RUN_20260118105447_86F110
+2026-01-18 10:58:07.915616: Stored inventory_agent for run RUN_20260118105447_86F110
+2026-01-18 10:58:08.202653: Stored replenishment_agent for run RUN_20260118105447_86F110
+2026-01-18 10:58:08.496200: Stored pricing_agent for run RUN_20260118105447_86F110
+2026-01-18 08:07:47.595286: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 08:07:47.595345: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 08:08:09.366315: Raw LLM Response length: 4726
+2026-01-18 08:08:09.366325: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 6,378 units across all stores with 84% average forecast confidence. Coimbatore shows highest demand (1,679 units), followed by Ve
+2026-01-18 13:38:10.287322: Stored demand_agent for run RUN_20260118133518_1AAFBE
+2026-01-18 13:38:10.521103: Stored trend_agent for run RUN_20260118133518_1AAFBE
+2026-01-18 13:38:10.752760: Stored inventory_agent for run RUN_20260118133518_1AAFBE
+2026-01-18 13:38:11.007007: Stored replenishment_agent for run RUN_20260118133518_1AAFBE
+2026-01-18 13:38:11.311948: Stored pricing_agent for run RUN_20260118133518_1AAFBE
+2026-01-18 09:05:49.286315: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 09:05:49.286328: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 09:06:12.246149: Raw LLM Response length: 4951
+2026-01-18 09:06:12.246156: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Analysis of Q1 2026 demand forecasts shows total forecasted demand of 6,378 units across all stores with 84% average forecast confidence. STORE_CBE shows hi
+2026-01-18 14:36:13.213139: Stored demand_agent for run RUN_20260118143321_BBEB34
+2026-01-18 14:36:13.471056: Stored trend_agent for run RUN_20260118143321_BBEB34
+2026-01-18 14:36:13.703293: Stored inventory_agent for run RUN_20260118143321_BBEB34
+2026-01-18 14:36:13.956161: Stored replenishment_agent for run RUN_20260118143321_BBEB34
+2026-01-18 14:36:14.188737: Stored pricing_agent for run RUN_20260118143321_BBEB34
+2026-01-18 09:14:24.080469: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 09:14:24.080518: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 09:14:46.252734: Raw LLM Response length: 5054
+2026-01-18 09:14:46.252773: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 6,378 units across all stores with 84% average confidence. Coimbatore leads with highest demand (1,679 units), followed by Vellor
+2026-01-18 14:44:47.206491: Stored demand_agent for run RUN_20260118144142_C46FCC
+2026-01-18 14:44:47.493442: Stored trend_agent for run RUN_20260118144142_C46FCC
+2026-01-18 14:44:48.037188: Stored inventory_agent for run RUN_20260118144142_C46FCC
+2026-01-18 14:44:48.333826: Stored replenishment_agent for run RUN_20260118144142_C46FCC
+2026-01-18 14:44:48.595723: Stored pricing_agent for run RUN_20260118144142_C46FCC
+2026-01-18 10:42:34.724678: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 10:42:34.724707: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 10:42:56.444218: Raw LLM Response length: 4620
+2026-01-18 10:42:56.444239: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Analysis of Q1 2026 demand forecasts shows total demand of 410 units across 4 products with 87% average confidence. Three products show strong demand with h
+2026-01-18 16:12:57.196915: Stored demand_agent for run RUN_20260118161023_F609EB
+2026-01-18 16:12:57.431207: Stored trend_agent for run RUN_20260118161023_F609EB
+2026-01-18 16:12:57.883195: Stored inventory_agent for run RUN_20260118161023_F609EB
+2026-01-18 16:12:58.117233: Stored replenishment_agent for run RUN_20260118161023_F609EB
+2026-01-18 16:12:58.384818: Stored pricing_agent for run RUN_20260118161023_F609EB
+2026-01-18 12:45:10.781401: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 12:45:10.781409: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 12:45:33.913514: Raw LLM Response length: 4754
+2026-01-18 12:45:33.913520: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 590 units across stores with 87% average confidence. Wool Blend Sweater shows highest demand (330 units) across stores.",
+       
+2026-01-18 18:15:34.786319: Stored demand_agent for run RUN_20260118181313_5BDA9A
+2026-01-18 18:15:35.037754: Stored trend_agent for run RUN_20260118181313_5BDA9A
+2026-01-18 18:15:35.269764: Stored inventory_agent for run RUN_20260118181313_5BDA9A
+2026-01-18 18:15:35.559887: Stored replenishment_agent for run RUN_20260118181313_5BDA9A
+2026-01-18 18:15:35.792061: Stored pricing_agent for run RUN_20260118181313_5BDA9A
+2026-01-18 13:02:09.964115: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 13:02:09.964123: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 13:02:32.136143: Raw LLM Response length: 4553
+2026-01-18 13:02:32.136168: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 590 units across stores with 87% average confidence. Wool Blend Sweater shows highest demand (330 units) across stores.",
+       
+2026-01-18 18:32:32.903532: Stored demand_agent for run RUN_20260118182952_BFDF16
+2026-01-18 18:32:33.128096: Stored trend_agent for run RUN_20260118182952_BFDF16
+2026-01-18 18:32:33.351028: Stored inventory_agent for run RUN_20260118182952_BFDF16
+2026-01-18 18:32:33.619219: Stored replenishment_agent for run RUN_20260118182952_BFDF16
+2026-01-18 18:32:33.843405: Stored pricing_agent for run RUN_20260118182952_BFDF16
+2026-01-18 13:17:03.223098: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 13:17:03.223146: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 13:17:27.182831: Raw LLM Response length: 4628
+2026-01-18 13:17:27.182845: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 590 units across 5 stores with 87% average confidence. Wool Blend Sweater shows highest demand with 330 units.",
+        "insight
+2026-01-18 18:47:27.951402: Stored demand_agent for run RUN_20260118184458_CCFA90
+2026-01-18 18:47:28.179005: Stored trend_agent for run RUN_20260118184458_CCFA90
+2026-01-18 18:47:28.418208: Stored inventory_agent for run RUN_20260118184458_CCFA90
+2026-01-18 18:47:28.714655: Stored replenishment_agent for run RUN_20260118184458_CCFA90
+2026-01-18 18:47:29.329042: Stored pricing_agent for run RUN_20260118184458_CCFA90
+2026-01-18 13:22:13.169191: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 13:22:13.169206: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 13:22:36.942334: Raw LLM Response length: 4805
+2026-01-18 13:22:36.942366: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Analysis of Q1 2026 demand forecasts showing total demand of 590 units across 5 product-store combinations with 87% average confidence",
+        "insights":
+2026-01-18 18:52:37.964727: Stored demand_agent for run RUN_20260118185002_685C7F
+2026-01-18 18:52:38.271745: Stored trend_agent for run RUN_20260118185002_685C7F
+2026-01-18 18:52:38.578851: Stored inventory_agent for run RUN_20260118185002_685C7F
+2026-01-18 18:52:38.887136: Stored replenishment_agent for run RUN_20260118185002_685C7F
+2026-01-18 18:52:39.129483: Stored pricing_agent for run RUN_20260118185002_685C7F
+2026-01-18 16:56:27.188630: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 16:56:27.188638: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 16:56:51.877651: Raw LLM Response length: 4994
+2026-01-18 16:56:51.877664: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 590 units across all products and stores with 87% average confidence. Winter wear showing strongest demand signals.",
+        "in
+2026-01-18 22:26:52.774565: Stored demand_agent for run RUN_20260118222350_7F6452
+2026-01-18 22:26:53.060380: Stored trend_agent for run RUN_20260118222350_7F6452
+2026-01-18 22:26:53.346238: Stored inventory_agent for run RUN_20260118222350_7F6452
+2026-01-18 22:26:53.632278: Stored replenishment_agent for run RUN_20260118222350_7F6452
+2026-01-18 22:26:53.919534: Stored pricing_agent for run RUN_20260118222350_7F6452

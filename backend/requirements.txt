@@ -1,0 +1,26 @@
+# API Framework
+fastapi==0.115.0
+uvicorn==0.32.0
+python-multipart
+websockets
+
+# Data validation
+pydantic==2.9.2
+pydantic-settings==2.9.1
+
+# AWS SDK (SYNC ONLY)
+boto3==1.42.26
+botocore==1.42.26
+
+# Bedrock & Agents
+anthropic==0.39.0
+strands-agents==0.1.0
+
+# Utilities
+python-dotenv
+httpx==0.27.2
+tenacity
+python-dateutil
+aiofiles
+structlog
+

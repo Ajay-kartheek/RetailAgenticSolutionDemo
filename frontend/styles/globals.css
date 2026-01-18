@@ -1,0 +1,368 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+/* ========================================
+   Design Tokens & CSS Variables
+   ======================================== */
+:root {
+  /* Sidebar Colors */
+  --sidebar-bg: #1a1f2e;
+  --sidebar-hover: #252b3d;
+  --sidebar-active: #2563eb;
+
+  /* Status Colors */
+  --status-processing: #3b82f6;
+  --status-active: #10b981;
+  --status-idle: #6b7280;
+  --status-completed: #10b981;
+  --status-error: #ef4444;
+
+  /* Priority Colors */
+  --priority-critical: #ef4444;
+  --priority-high: #f97316;
+  --priority-medium: #3b82f6;
+  --priority-low: #10b981;
+
+  /* Transition Speeds */
+  --transition-fast: 150ms;
+  --transition-normal: 300ms;
+  --transition-slow: 500ms;
+}
+
+/* ========================================
+   Base Styles
+   ======================================== */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Force light mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: light !important;
+  }
+}
+
+/* ========================================
+   Sidebar Styles
+   ======================================== */
+.bg-sidebar {
+  background-color: var(--sidebar-bg);
+}
+
+.bg-sidebar-hover {
+  background-color: var(--sidebar-hover);
+}
+
+.bg-sidebar-active {
+  background-color: var(--sidebar-active);
+}
+
+/* ========================================
+   Agent Card Animations
+   ======================================== */
+
+/* Thinking/Processing Animation - Pulsing Glow */
+.agent-thinking {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+    border-color: rgba(59, 130, 246, 0.8);
+  }
+}
+
+/* Active Status - Subtle left border glow */
+.agent-active {
+  border-left: 3px solid var(--status-active);
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.08), transparent);
+}
+
+/* Processing Dots Animation */
+.processing-dots::after {
+  content: '';
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+
+  0%,
+  20% {
+    content: '.';
+  }
+
+  40% {
+    content: '..';
+  }
+
+  60%,
+  100% {
+    content: '...';
+  }
+}
+
+/* Breathing Glow Effect */
+.breathing-glow {
+  animation: breathing 3s ease-in-out infinite;
+}
+
+@keyframes breathing {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+/* Status Indicator Pulse */
+.status-pulse {
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.15);
+    opacity: 0.8;
+  }
+}
+
+/* ========================================
+   Status Badge Styles
+   ======================================== */
+.status-badge {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+}
+
+.status-badge-processing {
+  @apply bg-blue-100 text-blue-700;
+}
+
+.status-badge-active {
+  @apply bg-green-100 text-green-700;
+}
+
+.status-badge-idle {
+  @apply bg-gray-100 text-gray-600;
+}
+
+.status-badge-completed {
+  @apply bg-green-100 text-green-700;
+}
+
+.status-badge-error {
+  @apply bg-red-100 text-red-700;
+}
+
+/* ========================================
+   Priority Badge Styles
+   ======================================== */
+.priority-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold;
+}
+
+.priority-critical {
+  @apply bg-red-100 text-red-800;
+}
+
+.priority-high {
+  @apply bg-orange-100 text-orange-800;
+}
+
+.priority-medium {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.priority-low {
+  @apply bg-green-100 text-green-800;
+}
+
+/* ========================================
+   Card Styles
+   ======================================== */
+.agent-card {
+  @apply bg-white border border-gray-200 rounded-xl p-4 transition-all duration-300;
+}
+
+.agent-card:hover {
+  @apply shadow-lg border-gray-300;
+  transform: translateY(-2px);
+}
+
+.agent-card.selected {
+  @apply border-blue-500 ring-2 ring-blue-500/20;
+}
+
+/* ========================================
+   Live Activity Styles
+   ======================================== */
+.activity-message {
+  @apply border-l-4 rounded-lg p-4 mb-3;
+}
+
+.activity-orchestrator {
+  @apply bg-purple-50 border-l-purple-500;
+}
+
+.activity-demand {
+  @apply bg-blue-50 border-l-blue-500;
+}
+
+.activity-trend {
+  @apply bg-indigo-50 border-l-indigo-500;
+}
+
+.activity-inventory {
+  @apply bg-amber-50 border-l-amber-500;
+}
+
+.activity-replenishment {
+  @apply bg-green-50 border-l-green-500;
+}
+
+.activity-pricing {
+  @apply bg-orange-50 border-l-orange-500;
+}
+
+.activity-campaign {
+  @apply bg-pink-50 border-l-pink-500;
+}
+
+/* ========================================
+   Scrollbar Styling
+   ======================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Thin scrollbar for sidebar */
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  @apply bg-white/20 rounded-full;
+}
+
+/* ========================================
+   Selection
+   ======================================== */
+::selection {
+  @apply bg-blue-100 text-gray-900;
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-lg border border-white/20;
+}
+
+.gradient-border {
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+  border: 2px solid transparent;
+}
+
+/* Smooth fade transitions */
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton loading */
+.skeleton {
+  @apply bg-gray-200 rounded animate-pulse;
+}
+
+/* ========================================
+   Map Marker Styles
+   ======================================== */
+.map-marker {
+  @apply w-4 h-4 rounded-full border-2 border-white shadow-lg cursor-pointer transition-transform duration-200;
+}
+
+.map-marker:hover {
+  transform: scale(1.3);
+}
+
+.map-marker-critical {
+  @apply bg-red-500;
+}
+
+.map-marker-high {
+  @apply bg-orange-500;
+}
+
+.map-marker-medium {
+  @apply bg-blue-500;
+}
+
+.map-marker-low {
+  @apply bg-green-500;
+}
