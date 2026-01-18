@@ -70,6 +70,8 @@ function ThinkingIndicator({ color }: { color: string }) {
 }
 
 // Brain Wave Animation for Active Agent
+// Each circle: starts invisible → fades in while expanding → fades out completely
+// The cycle repeats, but since it starts AND ends at opacity 0, no visible flicker
 function BrainWaveAnimation({ color }: { color: string }) {
     return (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -82,14 +84,15 @@ function BrainWaveAnimation({ color }: { color: string }) {
                         width: '100%',
                         height: '100%',
                     }}
+                    initial={{ scale: 1, opacity: 0 }}
                     animate={{
-                        scale: [1, 1.5, 2],
-                        opacity: [0.6, 0.3, 0],
+                        scale: [1, 1.3, 1.6],
+                        opacity: [0, 0.4, 0],
                     }}
                     transition={{
-                        duration: 2,
+                        duration: 1.5,
                         repeat: Infinity,
-                        delay: i * 0.6,
+                        delay: i * 0.5,
                         ease: 'easeOut',
                     }}
                 />
@@ -125,7 +128,8 @@ function ActivityMessage({ message, isLatest }: { message: AgentMessage; isLates
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="flex gap-4"
+            className="flex"
+            style={{ marginBottom: '20px', gap: '14px' }}
         >
             {/* Agent Avatar */}
             <div className="flex-shrink-0">

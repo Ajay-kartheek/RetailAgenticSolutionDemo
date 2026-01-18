@@ -234,3 +234,38 @@
 2026-01-18 23:59:16.023388: Stored inventory_agent for run RUN_20260118235626_932865
 2026-01-18 23:59:16.317962: Stored replenishment_agent for run RUN_20260118235626_932865
 2026-01-18 23:59:16.612552: Stored pricing_agent for run RUN_20260118235626_932865
+2026-01-18 19:39:31.290298: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 19:39:31.290298: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 19:39:59.494809: Raw LLM Response length: 5254
+2026-01-18 19:39:59.494809: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 1,360 units across all products and stores with 90% average confidence level. No low-confidence forecasts identified.",
+        "
+2026-01-19 01:10:00.826445: Stored demand_agent for run RUN_20260119010708_07BFEB
+2026-01-19 01:10:01.109865: Stored trend_agent for run RUN_20260119010708_07BFEB
+2026-01-19 01:10:01.390614: Stored inventory_agent for run RUN_20260119010708_07BFEB
+2026-01-19 01:10:01.671845: Stored replenishment_agent for run RUN_20260119010708_07BFEB
+2026-01-19 01:10:01.951715: Stored pricing_agent for run RUN_20260119010708_07BFEB
+2026-01-18 19:45:10.757982: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 19:45:10.757982: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 19:45:35.813124: Raw LLM Response length: 4559
+2026-01-18 19:45:35.813124: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Q1 2026 shows strong overall demand with 1,360 total units forecasted across 12 product-store combinations, with high average confidence of 90%",
+        "i
+2026-01-19 01:15:37.183898: Stored demand_agent for run RUN_20260119011244_FBD96D
+2026-01-19 01:15:37.480027: Stored trend_agent for run RUN_20260119011244_FBD96D
+2026-01-19 01:15:37.777847: Stored inventory_agent for run RUN_20260119011244_FBD96D
+2026-01-19 01:15:38.075766: Stored replenishment_agent for run RUN_20260119011244_FBD96D
+2026-01-19 01:15:38.414895: Stored pricing_agent for run RUN_20260119011244_FBD96D
+2026-01-18 19:49:17.063170: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-18 19:49:17.063679: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-18 19:49:46.516974: Raw LLM Response length: 5326
+2026-01-18 19:49:46.516974: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 1,360 units across all products and stores with 90% average confidence level. Cotton Kurta leads with 515 units total demand, fol
+2026-01-19 01:19:48.061499: Stored demand_agent for run RUN_20260119011639_A52A6B
+2026-01-19 01:19:48.481564: Stored trend_agent for run RUN_20260119011639_A52A6B
+2026-01-19 01:19:48.770811: Stored inventory_agent for run RUN_20260119011639_A52A6B
+2026-01-19 01:19:49.073207: Stored replenishment_agent for run RUN_20260119011639_A52A6B
+2026-01-19 01:19:49.365614: Stored pricing_agent for run RUN_20260119011639_A52A6B

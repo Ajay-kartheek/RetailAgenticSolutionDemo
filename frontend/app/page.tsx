@@ -103,9 +103,25 @@ export default function Dashboard() {
           else if (statusCounts.overstocked > 5) status = 'high';
           else if (statusCounts.in_stock > 0) status = 'medium'; // Normal
 
+          // Create a display name if store_name is missing
+          const storeNameMap: Record<string, string> = {
+            'STORE_CHN': 'SK Brands - Chennai',
+            'STORE_VLR': 'SK Brands - Vellore',
+            'STORE_SLM': 'SK Brands - Salem',
+            'STORE_ERD': 'SK Brands - Erode',
+            'STORE_TPR': 'SK Brands - Tiruppur',
+            'STORE_CBE': 'SK Brands - Coimbatore',
+            'STORE_TCH': 'SK Brands - Trichy',
+            'STORE_TJV': 'SK Brands - Thanjavur',
+            'STORE_MDU': 'SK Brands - Madurai',
+            'STORE_TUT': 'SK Brands - Thoothukudi',
+            'STORE_NGL': 'SK Brands - Nagercoil',
+          };
+          const displayName = s.store_name || storeNameMap[s.store_id] || s.store_id;
+
           return {
             id: s.store_id,
-            name: s.store_name,
+            name: displayName,
             status: status,
             x: coords.x,
             y: coords.y,
@@ -230,16 +246,6 @@ export default function Dashboard() {
           <h1 style={{ fontSize: '20px', fontWeight: 600 }} className="text-gray-900">Executive Dashboard</h1>
 
           <div className="flex items-center" style={{ gap: '24px' }}>
-            {/* Search */}
-            <div className="relative">
-              <Search style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }} className="w-4 h-4 text-gray-400" />
-              <input
-                style={{ paddingLeft: '40px', paddingRight: '16px', height: '40px', width: '280px', fontSize: '14px' }}
-                className="bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Search..."
-              />
-            </div>
-
             {/* Notification */}
             <button style={{ padding: '10px', position: 'relative' }} className="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg">
               <Bell className="w-5 h-5" />
@@ -248,10 +254,7 @@ export default function Dashboard() {
 
             {/* User profile */}
             <div style={{ paddingLeft: '24px', gap: '12px' }} className="flex items-center border-l border-gray-200">
-              <div className="text-right">
-                <div style={{ fontSize: '14px', fontWeight: 500 }} className="text-gray-900">Admin User</div>
-                <div style={{ fontSize: '12px' }} className="text-gray-500">Super Admin</div>
-              </div>
+              <div style={{ fontSize: '14px', fontWeight: 600 }} className="text-gray-900">Admin User</div>
               <div style={{ width: '36px', height: '36px', fontSize: '13px' }} className="rounded-full bg-gray-900 text-white flex items-center justify-center font-semibold">
                 SK
               </div>
@@ -332,22 +335,34 @@ export default function Dashboard() {
                     />
                   </svg>
 
-                  {/* City labels for context */}
-                  <div style={{ position: 'absolute', left: '90%', top: '9%', fontSize: '8px', color: '#475569', fontWeight: 600, transform: 'translateX(-50%)' }}>Chennai</div>
-                  <div style={{ position: 'absolute', left: '10%', top: '52%', fontSize: '8px', color: '#475569', fontWeight: 600 }}>Coimbatore</div>
-                  <div style={{ position: 'absolute', left: '45%', top: '76%', fontSize: '8px', color: '#475569', fontWeight: 600, transform: 'translateX(-50%)' }}>Madurai</div>
-                  <div style={{ position: 'absolute', left: '30%', top: '96%', fontSize: '8px', color: '#475569', fontWeight: 600, transform: 'translateX(-50%)' }}>Nagercoil</div>
+                  {/* City labels for context - pointer-events-none so they don't block dots */}
+                  <div style={{ position: 'absolute', left: '90%', top: '5%', fontSize: '9px', color: '#64748b', fontWeight: 500, transform: 'translateX(-50%)', pointerEvents: 'none' }}>Chennai</div>
+                  <div style={{ position: 'absolute', left: '10%', top: '52%', fontSize: '9px', color: '#64748b', fontWeight: 500, pointerEvents: 'none' }}>Coimbatore</div>
+                  <div style={{ position: 'absolute', left: '45%', top: '76%', fontSize: '9px', color: '#64748b', fontWeight: 500, transform: 'translateX(-50%)', pointerEvents: 'none' }}>Madurai</div>
+                  <div style={{ position: 'absolute', left: '30%', top: '96%', fontSize: '9px', color: '#64748b', fontWeight: 500, transform: 'translateX(-50%)', pointerEvents: 'none' }}>Nagercoil</div>
 
                   {/* Store pins */}
                   {stores.map(store => (
                     <button
                       key={store.id}
                       onClick={() => setSelectedStore(store)}
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2 group z-10"
+                      className="absolute transform -translate-x-1/2 -translate-y-1/2 group z-20"
                       style={{ left: `${store.x}%`, top: `${store.y}%` }}
                     >
                       <div className={`w-5 h-5 rounded-full border-3 border-white shadow-xl transition-transform ${statusColors[store.status as keyof typeof statusColors]} ${selectedStore?.id === store.id ? 'scale-150 ring-4 ring-gray-300' : 'hover:scale-125'}`}></div>
-                      <div className="opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-xl shadow-xl whitespace-nowrap">
+                      <div
+                        className="opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap pointer-events-none transition-opacity duration-150"
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: 'white',
+                          color: '#1e293b',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          borderRadius: '6px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+                          border: '1px solid #e2e8f0',
+                        }}
+                      >
                         {store.name}
                       </div>
                     </button>
