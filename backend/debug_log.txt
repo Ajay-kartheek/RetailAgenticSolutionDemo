@@ -328,3 +328,25 @@
 2026-01-19 17:43:19.714849: Stored inventory_agent for run RUN_20260119173951_CB0A4B
 2026-01-19 17:43:19.938179: Stored replenishment_agent for run RUN_20260119173951_CB0A4B
 2026-01-19 17:43:20.196738: Stored pricing_agent for run RUN_20260119173951_CB0A4B
+2026-01-19 12:27:24.111810: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 12:27:24.112348: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 12:27:29.390416: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 12:27:29.390416: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 12:27:47.190979: Raw LLM Response length: 4586
+2026-01-19 12:27:47.190979: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 25,100 units across all stores with 87% average forecast confidence. Strong performance in Tiruchirappalli (4,650 units) and Than
+2026-01-19 17:57:48.526394: Stored demand_agent for run RUN_20260119175427_A8FC94
+2026-01-19 17:57:48.811724: Stored trend_agent for run RUN_20260119175427_A8FC94
+2026-01-19 17:57:49.095632: Stored inventory_agent for run RUN_20260119175427_A8FC94
+2026-01-19 17:57:49.379384: Stored replenishment_agent for run RUN_20260119175427_A8FC94
+2026-01-19 17:57:49.683233: Stored pricing_agent for run RUN_20260119175427_A8FC94
+2026-01-19 12:27:55.130863: Raw LLM Response length: 4969
+2026-01-19 12:27:55.138507: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 25,100 units across all stores with 87% average confidence. Strong performance in traditional wear, with concerns in formal wear 
+2026-01-19 17:57:56.314781: Stored demand_agent for run RUN_20260119175359_8FCDB9
+2026-01-19 17:57:56.533997: Stored trend_agent for run RUN_20260119175359_8FCDB9
+2026-01-19 17:57:56.751914: Stored inventory_agent for run RUN_20260119175359_8FCDB9
+2026-01-19 17:57:56.968630: Stored replenishment_agent for run RUN_20260119175359_8FCDB9
+2026-01-19 17:57:57.182739: Stored pricing_agent for run RUN_20260119175359_8FCDB9

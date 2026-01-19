@@ -103,13 +103,13 @@ export default function StoreAnalyticsModal({ isOpen, onClose, store, inventory,
                                 <div style={{ fontSize: '20px', fontWeight: 700, color: '#0f172a' }}>{totalItems}</div>
                                 <div style={{ fontSize: '11px', fontWeight: 600, color: '#94a3b8', letterSpacing: '0.5px', marginTop: '2px' }}>TOTAL SKUS</div>
                             </div>
-                            <div style={{ padding: '12px 16px', backgroundColor: '#fef2f2', borderRadius: '10px', border: '1px solid #fecaca', flex: 1 }}>
-                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#dc2626' }}>{lowStockCount}</div>
-                                <div style={{ fontSize: '11px', fontWeight: 600, color: '#dc2626', letterSpacing: '0.5px', marginTop: '2px' }}>LOW STOCK</div>
-                            </div>
                             <div style={{ padding: '12px 16px', backgroundColor: '#fefce8', borderRadius: '10px', border: '1px solid #fef08a', flex: 1 }}>
-                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#ca8a04' }}>{outOfStockCount}</div>
-                                <div style={{ fontSize: '11px', fontWeight: 600, color: '#ca8a04', letterSpacing: '0.5px', marginTop: '2px' }}>OUT OF STOCK</div>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#ca8a04' }}>{lowStockCount}</div>
+                                <div style={{ fontSize: '11px', fontWeight: 600, color: '#ca8a04', letterSpacing: '0.5px', marginTop: '2px' }}>LOW STOCK</div>
+                            </div>
+                            <div style={{ padding: '12px 16px', backgroundColor: '#fef2f2', borderRadius: '10px', border: '1px solid #fecaca', flex: 1 }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#dc2626' }}>{outOfStockCount}</div>
+                                <div style={{ fontSize: '11px', fontWeight: 600, color: '#dc2626', letterSpacing: '0.5px', marginTop: '2px' }}>OUT OF STOCK</div>
                             </div>
                         </div>
 
@@ -188,8 +188,8 @@ export default function StoreAnalyticsModal({ isOpen, onClose, store, inventory,
 
                                             // Status styling
                                             const statusConfig: Record<string, { bg: string; color: string; label: string }> = {
-                                                low_stock: { bg: '#fef2f2', color: '#dc2626', label: 'Low Stock' },
-                                                out_of_stock: { bg: '#fefce8', color: '#ca8a04', label: 'Out of Stock' },
+                                                low_stock: { bg: '#fefce8', color: '#ca8a04', label: 'Low Stock' },
+                                                out_of_stock: { bg: '#fef2f2', color: '#dc2626', label: 'Out of Stock' },
                                                 in_stock: { bg: '#f0fdf4', color: '#16a34a', label: 'In Stock' }
                                             };
                                             const statusStyle = statusConfig[status] || { bg: '#f1f5f9', color: '#64748b', label: status };

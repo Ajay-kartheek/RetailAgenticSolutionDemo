@@ -9,6 +9,7 @@ import {
     Tag,
     Palette,
     ChevronRight,
+    ChevronLeft,
     ChevronDown,
     Clock,
     Sparkles,
@@ -87,12 +88,80 @@ interface AgentResult {
     timestamp?: string;
 }
 
+// Pagination Component
+const ROWS_PER_PAGE = 10;
+
+function Pagination({ currentPage, totalItems, onPageChange }: {
+    currentPage: number;
+    totalItems: number;
+    onPageChange: (page: number) => void;
+}) {
+    const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
+    if (totalPages <= 1) return null;
+
+    return (
+        <div style={{
+            padding: '12px 16px',
+            backgroundColor: '#f8fafc',
+            borderTop: '1px solid #e2e8f0',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+        }}>
+            <span style={{ fontSize: '12px', color: '#64748b' }}>
+                Page {currentPage + 1} of {totalPages} ({totalItems} items)
+            </span>
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                    onClick={() => onPageChange(currentPage - 1)}
+                    disabled={currentPage === 0}
+                    style={{
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '6px',
+                        backgroundColor: currentPage === 0 ? '#f1f5f9' : 'white',
+                        color: currentPage === 0 ? '#94a3b8' : '#475569',
+                        cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}
+                >
+                    <ChevronLeft style={{ width: '14px', height: '14px' }} /> Previous
+                </button>
+                <button
+                    onClick={() => onPageChange(currentPage + 1)}
+                    disabled={currentPage >= totalPages - 1}
+                    style={{
+                        padding: '6px 12px',
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '6px',
+                        backgroundColor: currentPage >= totalPages - 1 ? '#f1f5f9' : 'white',
+                        color: currentPage >= totalPages - 1 ? '#94a3b8' : '#475569',
+                        cursor: currentPage >= totalPages - 1 ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                    }}
+                >
+                    Next <ChevronRight style={{ width: '14px', height: '14px' }} />
+                </button>
+            </div>
+        </div>
+    );
+}
+
 // Demand Table Component
 function DemandDataTable({ selectedStore, onStoreChange }: { selectedStore: string, onStoreChange: (storeId: string) => void }) {
     const [stores, setStores] = useState<Store[]>([]);
     const [insights, setInsights] = useState<DemandInsight[]>([]);
     const [summary, setSummary] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         const fetchStores = async () => {
@@ -231,7 +300,7 @@ function DemandDataTable({ selectedStore, onStoreChange }: { selectedStore: stri
                             </tr>
                         </thead>
                         <tbody>
-                            {insights.slice(0, 20).map((insight, index) => (
+                            {insights.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE).map((insight, index) => (
                                 <tr
                                     key={`${insight.store_id}-${insight.product_id}`}
                                     style={{
@@ -270,11 +339,11 @@ function DemandDataTable({ selectedStore, onStoreChange }: { selectedStore: stri
                             ))}
                         </tbody>
                     </table>
-                    {insights.length > 20 && (
-                        <div style={{ padding: '12px 16px', textAlign: 'center', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
-                            <span style={{ fontSize: '12px', color: '#64748b' }}>Showing 20 of {insights.length} items</span>
-                        </div>
-                    )}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={insights.length}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
             )}
         </div>
@@ -313,6 +382,7 @@ function TrendDataTable({ selectedStore, onStoreChange }: { selectedStore: strin
     const [insights, setInsights] = useState<TrendInsight[]>([]);
     const [summary, setSummary] = useState<TrendSummary | null>(null);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         const fetchStores = async () => {
@@ -348,7 +418,7 @@ function TrendDataTable({ selectedStore, onStoreChange }: { selectedStore: strin
             'in-trend': { bg: '#dcfce7', color: '#166534', label: 'Trending' },
             'average': { bg: '#dbeafe', color: '#1e40af', label: 'Average' },
             'slow-moving': { bg: '#fef3c7', color: '#92400e', label: 'Slow' },
-            'no-trend': { bg: '#fee2e2', color: '#991b1b', label: 'None' },
+            'no-trend': { bg: '#fee2e2', color: '#991b1b', label: 'No Trend' },
         };
         const style = styles[status] || styles['average'];
         return (
@@ -447,7 +517,7 @@ function TrendDataTable({ selectedStore, onStoreChange }: { selectedStore: strin
                             </tr>
                         </thead>
                         <tbody>
-                            {insights.slice(0, 20).map((insight, idx) => (
+                            {insights.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE).map((insight, idx) => (
                                 <tr key={`${insight.product_id}-${insight.store_id}-${idx}`} style={{ borderBottom: idx < insights.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                                     <td style={{ padding: '12px 16px' }}>
                                         <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{insight.product_name}</div>
@@ -493,11 +563,11 @@ function TrendDataTable({ selectedStore, onStoreChange }: { selectedStore: strin
                             ))}
                         </tbody>
                     </table>
-                    {insights.length > 20 && (
-                        <div style={{ padding: '12px 16px', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
-                            <span style={{ fontSize: '12px', color: '#64748b' }}>Showing 20 of {insights.length} items</span>
-                        </div>
-                    )}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={insights.length}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
             )}
         </div>
@@ -531,6 +601,7 @@ function InventoryDataTable({ selectedStore, onStoreChange }: { selectedStore: s
     const [insights, setInsights] = useState<InventoryInsight[]>([]);
     const [summary, setSummary] = useState<InventorySummary | null>(null);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         const fetchStores = async () => {
@@ -670,7 +741,7 @@ function InventoryDataTable({ selectedStore, onStoreChange }: { selectedStore: s
                             </tr>
                         </thead>
                         <tbody>
-                            {insights.slice(0, 20).map((insight, idx) => {
+                            {insights.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE).map((insight, idx) => {
                                 const daysStyle = getDaysOfStockStyle(insight.days_of_stock);
                                 return (
                                     <tr key={`${insight.product_id}-${insight.store_id}-${idx}`} style={{ borderBottom: idx < insights.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
@@ -719,11 +790,11 @@ function InventoryDataTable({ selectedStore, onStoreChange }: { selectedStore: s
                             })}
                         </tbody>
                     </table>
-                    {insights.length > 20 && (
-                        <div style={{ padding: '12px 16px', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
-                            <span style={{ fontSize: '12px', color: '#64748b' }}>Showing 20 of {insights.length} items</span>
-                        </div>
-                    )}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={insights.length}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
             )}
         </div>
@@ -763,6 +834,7 @@ function ReplenishmentDataTable({ selectedStore, onStoreChange }: { selectedStor
     const [insights, setInsights] = useState<ReplenishmentInsight[]>([]);
     const [summary, setSummary] = useState<ReplenishmentSummary | null>(null);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         const fetchStores = async () => {
@@ -905,22 +977,23 @@ function ReplenishmentDataTable({ selectedStore, onStoreChange }: { selectedStor
                         <thead>
                             <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
                                 <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Product</th>
+                                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Source</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Target Store</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Qty Needed</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Action</th>
-                                <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Source</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Urgency</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Cost</th>
                                 <th style={{ padding: '12px 16px', textAlign: 'center', fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ETA</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {insights.slice(0, 20).map((insight, idx) => (
+                            {insights.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE).map((insight, idx) => (
                                 <tr key={`${insight.plan_id}-${idx}`} style={{ borderBottom: idx < insights.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                                     <td style={{ padding: '12px 16px' }}>
                                         <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{insight.product_name}</div>
                                         <div style={{ fontSize: '11px', color: '#94a3b8' }}>{insight.category}</div>
                                     </td>
+                                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#475569' }}>{insight.source || '—'}</td>
                                     <td style={{ padding: '12px 16px', fontSize: '13px', color: '#475569' }}>{insight.target_store_id}</td>
                                     <td style={{ padding: '12px 16px', textAlign: 'right' }}>
                                         <span style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{insight.required_quantity} <span style={{ color: '#94a3b8', fontWeight: 400 }}>units</span></span>
@@ -928,7 +1001,6 @@ function ReplenishmentDataTable({ selectedStore, onStoreChange }: { selectedStor
                                     <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                                         {getActionTypeBadge(insight.action_type)}
                                     </td>
-                                    <td style={{ padding: '12px 16px', fontSize: '13px', color: '#475569' }}>{insight.source || '—'}</td>
                                     <td style={{ padding: '12px 16px', textAlign: 'center' }}>
                                         {getUrgencyBadge(insight.urgency)}
                                     </td>
@@ -942,11 +1014,11 @@ function ReplenishmentDataTable({ selectedStore, onStoreChange }: { selectedStor
                             ))}
                         </tbody>
                     </table>
-                    {insights.length > 20 && (
-                        <div style={{ padding: '12px 16px', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
-                            <span style={{ fontSize: '12px', color: '#64748b' }}>Showing 20 of {insights.length} plans</span>
-                        </div>
-                    )}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={insights.length}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
             )}
         </div>
@@ -986,6 +1058,7 @@ function PricingDataTable({ selectedStore, onStoreChange }: { selectedStore: str
     const [insights, setInsights] = useState<PricingInsight[]>([]);
     const [summary, setSummary] = useState<PricingSummary | null>(null);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(0);
 
     useEffect(() => {
         const fetchStores = async () => {
@@ -1152,7 +1225,7 @@ function PricingDataTable({ selectedStore, onStoreChange }: { selectedStore: str
                             </tr>
                         </thead>
                         <tbody>
-                            {insights.slice(0, 20).map((insight, idx) => (
+                            {insights.slice(currentPage * ROWS_PER_PAGE, (currentPage + 1) * ROWS_PER_PAGE).map((insight, idx) => (
                                 <tr key={`${insight.product_id}-${insight.store_id}-${idx}`} style={{ borderBottom: idx < insights.length - 1 ? '1px solid #f1f5f9' : 'none' }}>
                                     <td style={{ padding: '10px 12px' }}>
                                         <div style={{ fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{insight.product_name}</div>
@@ -1192,11 +1265,11 @@ function PricingDataTable({ selectedStore, onStoreChange }: { selectedStore: str
                             ))}
                         </tbody>
                     </table>
-                    {insights.length > 20 && (
-                        <div style={{ padding: '12px 16px', backgroundColor: '#f8fafc', borderTop: '1px solid #e2e8f0', textAlign: 'center' }}>
-                            <span style={{ fontSize: '12px', color: '#64748b' }}>Showing 20 of {insights.length} recommendations</span>
-                        </div>
-                    )}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalItems={insights.length}
+                        onPageChange={setCurrentPage}
+                    />
                 </div>
             )}
         </div>
@@ -1430,55 +1503,6 @@ export default function AgentInsights() {
                                         onStoreChange={setSelectedStore}
                                     />
                                 )}
-                                {/* Insights Section */}
-                                <div style={{ padding: '24px 32px', borderBottom: '1px solid #f1f5f9' }}>
-                                    <div className="flex items-center gap-2" style={{ marginBottom: '16px' }}>
-                                        <Lightbulb style={{ width: '18px', height: '18px', color: '#f59e0b' }} />
-                                        <h3 style={{ fontSize: '15px', fontWeight: 600 }} className="text-gray-900">Key Insights</h3>
-                                    </div>
-
-                                    {currentInsights.insights && currentInsights.insights.length > 0 ? (
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            {currentInsights.insights.map((insight, i) => (
-                                                <div
-                                                    key={i}
-                                                    style={{ padding: '12px 14px', borderRadius: '8px', backgroundColor: '#fffbeb', border: '1px solid #fef3c7' }}
-                                                    className="flex items-start gap-3"
-                                                >
-                                                    <Sparkles style={{ width: '14px', height: '14px', color: '#f59e0b', marginTop: '2px', flexShrink: 0 }} />
-                                                    <p style={{ fontSize: '13px', color: '#78350f', lineHeight: 1.5 }}>{insight}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-gray-500 italic">No specific insights available yet. Run a new analysis to generate insights.</p>
-                                    )}
-                                </div>
-
-                                {/* Recommendations Section */}
-                                <div style={{ padding: '24px 32px', borderBottom: '1px solid #f1f5f9' }}>
-                                    <div className="flex items-center gap-2" style={{ marginBottom: '16px' }}>
-                                        <Target style={{ width: '18px', height: '18px', color: '#3b82f6' }} />
-                                        <h3 style={{ fontSize: '15px', fontWeight: 600 }} className="text-gray-900">Recommendations</h3>
-                                    </div>
-
-                                    {currentInsights.recommendations && currentInsights.recommendations.length > 0 ? (
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                                            {currentInsights.recommendations.map((rec, i) => (
-                                                <div
-                                                    key={i}
-                                                    style={{ padding: '12px 14px', borderRadius: '8px', backgroundColor: '#eff6ff', border: '1px solid #dbeafe' }}
-                                                    className="flex items-start gap-3"
-                                                >
-                                                    <ArrowRight style={{ width: '14px', height: '14px', color: '#3b82f6', marginTop: '2px', flexShrink: 0 }} />
-                                                    <p style={{ fontSize: '13px', color: '#1e3a8a', lineHeight: 1.5 }}>{rec}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className="text-sm text-gray-500 italic">No recommendations available yet.</p>
-                                    )}
-                                </div>
 
                                 {/* Placeholder - demand table moved to top */}
                             </>
