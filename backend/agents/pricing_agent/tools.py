@@ -106,7 +106,7 @@ def create_pricing_recommendation(
 
     current_price = float(product.get("base_price", 999))
     cost_price = float(product.get("cost_price", 400))
-    product_name = product.get("product_name", product_id)
+    product_name = product.get("product_name") or product.get("name") or product_id
 
     # Determine stock status
     stock_status = "in-stock"

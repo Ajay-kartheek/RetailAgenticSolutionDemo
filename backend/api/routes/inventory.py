@@ -54,9 +54,9 @@ async def get_inventory_status_summary():
     stores = db.get_all_stores()
 
     summary = {
-        "understocked": 0,
+        "out_of_stock": 0,
+        "low_stock": 0,
         "in_stock": 0,
-        "overstocked": 0,
         "by_store": {}
     }
 
@@ -64,7 +64,7 @@ async def get_inventory_status_summary():
         store_id = store["store_id"]
         inventory = db.get_store_inventory(store_id)
 
-        store_summary = {"understocked": 0, "in_stock": 0, "overstocked": 0}
+        store_summary = {"out_of_stock": 0, "low_stock": 0, "in_stock": 0}
 
         for item in inventory:
             status = item.get("stock_status", "in_stock")

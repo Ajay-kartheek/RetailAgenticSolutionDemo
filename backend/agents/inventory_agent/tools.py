@@ -202,14 +202,28 @@ def search_inventory_items(
     all_inventory = db_client.scan(settings.inventory_table)
     all_forecasts = db_client.scan(settings.demand_forecast_table)
     all_products = db_client.scan(settings.products_table)
+    all_sales = db_client.scan(settings.sales_table)
     
     # Create lookup dicts
     inventory_by_key = {}
+    inventory_details = {}
     for inv in all_inventory:
         key = f"{inv.get('store_id')}#{inv.get('product_id')}"
         inventory_by_key[key] = inv.get("quantity", 0)
+        inventory_details[key] = {
+            "safety_stock": inv.get("safety_stock", 100),
+            "reorder_point": inv.get("reorder_point", 80)
+        }
     
-    product_names = {p.get("product_id"): p.get("product_name", p.get("product_id")) for p in all_products}
+    product_names = {p.get("product_id"): p.get("name", p.get("product_name", p.get("product_id"))) for p in all_products}
+    
+    # Calculate actual sales by store+product
+    sales_by_key = {}
+    period_start = "2026-01-01"
+    for sale in all_sales:
+        key = f"{sale.get('store_id')}#{sale.get('product_id')}"
+        if sale.get("sale_date", "") >= period_start:
+            sales_by_key[key] = sales_by_key.get(key, 0) + sale.get("quantity_sold", 0)
     
     # Filter forecasts for period
     period_forecasts = [f for f in all_forecasts if f.get("forecast_period") == forecast_period]
@@ -228,9 +242,14 @@ def search_inventory_items(
             
         key = f"{store_id}#{product_id}"
         current_stock = inventory_by_key.get(key, 0)
+        actual_sales = sales_by_key.get(key, 0)
+        inv_details = inventory_details.get(key, {"safety_stock": 100, "reorder_point": 80})
+        
+        # Calculate remaining demand
+        remaining_demand = max(0, forecasted_demand - actual_sales)
         
         # Calculate ratio
-        ratio = round(current_stock / forecasted_demand, 2) if forecasted_demand > 0 else 999.0
+        ratio = round(current_stock / remaining_demand, 2) if remaining_demand > 0 else 999.0
         
         # Check criteria
         if min_stock_ratio is not None and ratio < min_stock_ratio:
@@ -249,6 +268,9 @@ def search_inventory_items(
             "product_name": product_names.get(product_id, product_id),
             "current_stock": current_stock,
             "forecasted_demand": forecasted_demand,
+            "actual_sales": actual_sales,
+            "remaining_demand": remaining_demand,
+            "safety_stock": inv_details.get("safety_stock", 100),
             "stock_to_demand_ratio": ratio,
             "calculated_status": status
         }

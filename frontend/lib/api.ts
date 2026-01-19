@@ -218,4 +218,42 @@ export const getDemandInsights = async (storeId?: string, period: string = '2026
   return data;
 };
 
+// Trend Insights
+export const getTrendInsights = async (storeId?: string, period: string = '2026-Q1') => {
+  const params = new URLSearchParams();
+  if (storeId) params.append('store_id', storeId);
+  params.append('period', period);
+  const { data } = await api.get(`/agents/trend/insights?${params.toString()}`);
+  return data;
+};
+
+// Inventory Insights
+export const getInventoryInsights = async (storeId?: string, period: string = '2026-Q1') => {
+  const params = new URLSearchParams();
+  if (storeId) params.append('store_id', storeId);
+  params.append('period', period);
+  const { data } = await api.get(`/agents/inventory/insights?${params.toString()}`);
+  return data;
+};
+
+// Replenishment Insights
+export const getReplenishmentInsights = async (storeId?: string, period: string = '2026-Q1') => {
+  const params = new URLSearchParams();
+  if (storeId) params.append('store_id', storeId);
+  params.append('period', period);
+  const { data } = await api.get(`/agents/replenishment/insights?${params.toString()}`);
+  return data;
+};
+
+// Pricing Insights
+export const getPricingInsights = async (storeId?: string, period: string = '2026-Q1') => {
+  const params = new URLSearchParams();
+  if (storeId) params.append('store_id', storeId);
+  params.append('period', period);
+  const { data } = await api.get(`/agents/pricing/insights?${params.toString()}`);
+  return data;
+};
+
 export default api;
+
+

@@ -295,3 +295,36 @@
 2026-01-19 10:11:52.525995: Stored inventory_agent for run RUN_20260119100929_B19F61
 2026-01-19 10:11:52.807804: Stored replenishment_agent for run RUN_20260119100929_B19F61
 2026-01-19 10:11:53.085117: Stored pricing_agent for run RUN_20260119100929_B19F61
+2026-01-19 07:10:37.051024: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 07:10:37.051034: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 07:11:01.559990: Raw LLM Response length: 5033
+2026-01-19 07:11:01.560006: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 370 units across stores with very high average confidence score of 0.91. Three products show significant demand with no low-confi
+2026-01-19 12:41:02.328625: Stored demand_agent for run RUN_20260119123835_19BD49
+2026-01-19 12:41:02.547747: Stored trend_agent for run RUN_20260119123835_19BD49
+2026-01-19 12:41:02.781768: Stored inventory_agent for run RUN_20260119123835_19BD49
+2026-01-19 12:41:03.011330: Stored replenishment_agent for run RUN_20260119123835_19BD49
+2026-01-19 12:41:03.236684: Stored pricing_agent for run RUN_20260119123835_19BD49
+2026-01-19 11:44:30.785513: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 11:44:30.785534: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 11:44:56.567436: Raw LLM Response length: 5179
+2026-01-19 11:44:56.567443: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 25,100 units across stores with 87% average confidence. Highest demand in Tiruchirappalli (4,650 units) and Thanjavur (4,050 unit
+2026-01-19 17:14:57.594896: Stored demand_agent for run RUN_20260119171149_9C6D4B
+2026-01-19 17:14:57.899141: Stored trend_agent for run RUN_20260119171149_9C6D4B
+2026-01-19 17:14:58.182478: Stored inventory_agent for run RUN_20260119171149_9C6D4B
+2026-01-19 17:14:58.466048: Stored replenishment_agent for run RUN_20260119171149_9C6D4B
+2026-01-19 17:14:58.753757: Stored pricing_agent for run RUN_20260119171149_9C6D4B
+2026-01-19 12:12:54.903061: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 12:12:54.903071: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 12:13:18.327717: Raw LLM Response length: 4931
+2026-01-19 12:13:18.327724: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 25,100 units across all stores with 87% average forecast confidence. High demand for traditional wear, particularly Cotton Kurta.
+2026-01-19 17:43:19.272718: Stored demand_agent for run RUN_20260119173951_CB0A4B
+2026-01-19 17:43:19.494141: Stored trend_agent for run RUN_20260119173951_CB0A4B
+2026-01-19 17:43:19.714849: Stored inventory_agent for run RUN_20260119173951_CB0A4B
+2026-01-19 17:43:19.938179: Stored replenishment_agent for run RUN_20260119173951_CB0A4B
+2026-01-19 17:43:20.196738: Stored pricing_agent for run RUN_20260119173951_CB0A4B

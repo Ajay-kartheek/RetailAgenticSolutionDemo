@@ -95,6 +95,9 @@ export default function DecisionsPage() {
     if (activeTab === 'Approved') {
       return d.status === 'approved' || d.status === 'executed';
     }
+    if (activeTab === 'Pending') {
+      return d.status === 'pending' || d.status === 'pending_approval';
+    }
     return d.status.toLowerCase() === activeTab.toLowerCase();
   });
 

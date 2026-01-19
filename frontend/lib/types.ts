@@ -6,7 +6,7 @@ export type TrendStatus = 'in-trend' | 'average' | 'slow-moving' | 'no-trend';
 
 export type StockStatus = 'out_of_stock' | 'low_stock' | 'in_stock';
 
-export type DecisionStatus = 'pending' | 'approved' | 'rejected' | 'executed';
+export type DecisionStatus = 'pending' | 'pending_approval' | 'approved' | 'rejected' | 'executed';
 
 export type DecisionType = 'replenishment' | 'transfer' | 'pricing' | 'promotion' | 'markdown' | 'campaign';
 
@@ -88,6 +88,34 @@ export interface TrendAnalysis {
   analysis_period_days: number;
 }
 
+export interface TrendInsight {
+  store_id: string;
+  product_id: string;
+  product_name: string;
+  category: string;
+  forecasted_demand: number;
+  actual_sales: number;
+  expected_sales: number;
+  velocity_ratio: number;
+  trend_status: 'in-trend' | 'average' | 'slow-moving' | 'no-trend';
+  projected_total: number;
+  surplus_deficit: number;
+  season: string;
+  days_elapsed: number;
+  days_remaining: number;
+}
+
+export interface TrendInsightsResponse {
+  insights: TrendInsight[];
+  summary: {
+    total_items: number;
+    trending_count: number;
+    slow_moving_count: number;
+    average_velocity_ratio: number;
+    period: string;
+    days_elapsed: number;
+  };
+}
 export interface ReplenishmentPlan {
   store_id: string;
   product_id: string;
