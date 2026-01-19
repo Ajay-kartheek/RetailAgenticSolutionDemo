@@ -24,3 +24,5 @@ python-dateutil
 aiofiles
 structlog
 
+# Map visualization
+folium

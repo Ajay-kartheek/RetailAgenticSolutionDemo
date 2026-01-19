@@ -33,19 +33,19 @@ const agents = [
   { id: 'campaign_agent', name: 'Brand Campaign', icon: Palette, color: 'text-pink-600', bg: 'bg-pink-100' },
 ];
 
-// Map stores to visual coordinates - adjusted to align with SVG outline
-// The SVG goes from about x:10-98, y:5-98 so dots need to match
+// Map stores to visual coordinates - positioned for the visible map area
+// Coordinates are percentages within the container, centered on the map
 const STORE_COORDINATES: Record<string, { x: number; y: number }> = {
-  'STORE_CHN': { x: 88, y: 12 },   // Chennai - top right (coast)
-  'STORE_VLR': { x: 75, y: 18 },   // Vellore - upper right  
-  'STORE_SLM': { x: 50, y: 35 },   // Salem - north central
-  'STORE_ERD': { x: 35, y: 42 },   // Erode - west central  
-  'STORE_TPR': { x: 28, y: 48 },   // Tiruppur - west (near CBE)
-  'STORE_CBE': { x: 18, y: 52 },   // Coimbatore - far left (western border)
-  'STORE_TCH': { x: 55, y: 55 },   // Trichy - central
-  'STORE_TJV': { x: 68, y: 52 },   // Thanjavur - east central
-  'STORE_MDU': { x: 45, y: 72 },   // Madurai - south central
-  'STORE_NGL': { x: 30, y: 92 },   // Nagercoil - southern tip
+  'STORE_CHN': { x: 68, y: 18 },   // Chennai - northeast coast
+  'STORE_VLR': { x: 58, y: 24 },   // Vellore - north inland
+  'STORE_SLM': { x: 48, y: 36 },   // Salem - north central
+  'STORE_ERD': { x: 38, y: 42 },   // Erode - west central
+  'STORE_TPR': { x: 33, y: 48 },   // Tiruppur - west
+  'STORE_CBE': { x: 28, y: 52 },   // Coimbatore - far west
+  'STORE_TCH': { x: 52, y: 54 },   // Trichy - central
+  'STORE_TJV': { x: 62, y: 56 },   // Thanjavur - east central
+  'STORE_MDU': { x: 46, y: 68 },   // Madurai - south central
+  'STORE_NGL': { x: 40, y: 82 },   // Nagercoil - southern tip
 };
 
 
@@ -306,71 +306,22 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Map Area - fills remaining space */}
+                {/* Map Area - Interactive Folium Map */}
                 <div style={{
                   flex: 1,
                   minHeight: '400px',
                   position: 'relative',
-                  backgroundColor: '#f0f9ff',
-                  overflow: 'hidden'
                 }}>
-                  {/* Tamil Nadu Outline SVG */}
-                  <svg
-                    viewBox="0 0 100 100"
-                    preserveAspectRatio="none"
+                  <iframe
+                    src="/tamilnadu-stores-map.html"
                     style={{
-                      position: 'absolute',
-                      inset: 0,
                       width: '100%',
                       height: '100%',
-                      opacity: 0.15
+                      border: 'none',
+                      borderRadius: '0 0 12px 12px',
                     }}
-                  >
-                    {/* Simplified TN state outline path */}
-                    <path
-                      d="M95 5 L98 10 L96 18 L90 22 L85 28 L80 35 L75 40 L72 48 L75 55 L72 62 L68 68 L60 75 L50 82 L42 88 L35 95 L28 98 L22 95 L18 88 L15 78 L12 68 L10 55 L12 45 L15 38 L18 32 L25 25 L35 18 L48 12 L62 8 L78 5 Z"
-                      fill="#3b82f6"
-                      stroke="#2563eb"
-                      strokeWidth="1"
-                    />
-                  </svg>
-
-                  {/* City labels for context - pointer-events-none so they don't block dots */}
-                  <div style={{ position: 'absolute', left: '90%', top: '5%', fontSize: '9px', color: '#64748b', fontWeight: 500, transform: 'translateX(-50%)', pointerEvents: 'none' }}>Chennai</div>
-                  <div style={{ position: 'absolute', left: '10%', top: '52%', fontSize: '9px', color: '#64748b', fontWeight: 500, pointerEvents: 'none' }}>Coimbatore</div>
-                  <div style={{ position: 'absolute', left: '45%', top: '76%', fontSize: '9px', color: '#64748b', fontWeight: 500, transform: 'translateX(-50%)', pointerEvents: 'none' }}>Madurai</div>
-                  <div style={{ position: 'absolute', left: '30%', top: '96%', fontSize: '9px', color: '#64748b', fontWeight: 500, transform: 'translateX(-50%)', pointerEvents: 'none' }}>Nagercoil</div>
-
-                  {/* Store pins */}
-                  {stores.map(store => (
-                    <button
-                      key={store.id}
-                      onClick={() => setSelectedStore(store)}
-                      className="absolute transform -translate-x-1/2 -translate-y-1/2 group z-20"
-                      style={{ left: `${store.x}%`, top: `${store.y}%` }}
-                    >
-                      <div className={`w-5 h-5 rounded-full border-3 border-white shadow-xl transition-transform ${statusColors[store.status as keyof typeof statusColors]} ${selectedStore?.id === store.id ? 'scale-150 ring-4 ring-gray-300' : 'hover:scale-125'}`}></div>
-                      <div
-                        className="opacity-0 group-hover:opacity-100 absolute bottom-full left-1/2 -translate-x-1/2 mb-2 whitespace-nowrap pointer-events-none transition-opacity duration-150"
-                        style={{
-                          padding: '6px 12px',
-                          backgroundColor: 'white',
-                          color: '#1e293b',
-                          fontSize: '12px',
-                          fontWeight: 600,
-                          borderRadius: '6px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-                          border: '1px solid #e2e8f0',
-                        }}
-                      >
-                        {store.name}
-                      </div>
-                    </button>
-                  ))}
-
-                  {stores.length === 0 && (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-sm">Loading map data...</div>
-                  )}
+                    title="Tamil Nadu Store Map"
+                  />
                 </div>
               </div>
 
