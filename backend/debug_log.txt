@@ -269,3 +269,29 @@
 2026-01-19 01:19:48.770811: Stored inventory_agent for run RUN_20260119011639_A52A6B
 2026-01-19 01:19:49.073207: Stored replenishment_agent for run RUN_20260119011639_A52A6B
 2026-01-19 01:19:49.365614: Stored pricing_agent for run RUN_20260119011639_A52A6B
+2026-01-19 04:38:28.899027: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 04:38:28.899060: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 04:38:52.813265: Raw LLM Response length: 4457
+2026-01-19 04:38:52.813276: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Strong Q1 2026 demand forecast with 370 total units across 3 stores, very high confidence (0.91 average)",
+        "insights": [
+            "Highest demand
+2026-01-19 10:08:53.679588: Stored demand_agent for run RUN_20260119100625_985B17
+2026-01-19 10:08:54.120832: Stored trend_agent for run RUN_20260119100625_985B17
+2026-01-19 10:08:54.370219: Stored inventory_agent for run RUN_20260119100625_985B17
+2026-01-19 10:08:54.688008: Stored replenishment_agent for run RUN_20260119100625_985B17
+2026-01-19 10:08:54.923682: Stored pricing_agent for run RUN_20260119100625_985B17
+2026-01-19 04:41:29.959343: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 04:41:29.959386: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 04:41:51.018977: Raw LLM Response length: 4298
+2026-01-19 04:41:51.019010: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 370 units across 3 products with very high confidence (0.91 average)",
+        "insights": [
+            "Wool Blend Sweater has 
+2026-01-19 10:11:51.970221: Stored demand_agent for run RUN_20260119100929_B19F61
+2026-01-19 10:11:52.247792: Stored trend_agent for run RUN_20260119100929_B19F61
+2026-01-19 10:11:52.525995: Stored inventory_agent for run RUN_20260119100929_B19F61
+2026-01-19 10:11:52.807804: Stored replenishment_agent for run RUN_20260119100929_B19F61
+2026-01-19 10:11:53.085117: Stored pricing_agent for run RUN_20260119100929_B19F61

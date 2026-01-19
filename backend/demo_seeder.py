@@ -28,10 +28,10 @@ dynamodb = get_dynamodb_resource()
 # PRODUCT DATA (Same for both scenarios)
 # ============================================================================
 PRODUCTS = [
-    {"product_id": "PROD_WS001", "name": "Wool Blend Sweater", "category": "Winterwear", "cost": 600, "price": 1799, "sku_base": "WS001"},
-    {"product_id": "PROD_LJ002", "name": "Lightweight Jacket", "category": "Outerwear", "cost": 800, "price": 2499, "sku_base": "LJ002"},
-    {"product_id": "PROD_CK003", "name": "Cotton Kurta", "category": "Traditional", "cost": 300, "price": 999, "sku_base": "CK003"},
-    {"product_id": "PROD_DJ004", "name": "Denim Jeans", "category": "Bottomwear", "cost": 450, "price": 1499, "sku_base": "DJ004"},
+    {"product_id": "PROD_WS001", "name": "Wool Blend Sweater", "category": "Winterwear", "cost": 600, "price": 1799, "sku_base": "WS001", "seasons": ["Winter"]},
+    {"product_id": "PROD_LJ002", "name": "Lightweight Jacket", "category": "Outerwear", "cost": 800, "price": 2499, "sku_base": "LJ002", "seasons": ["Winter", "Monsoon"]},
+    {"product_id": "PROD_CK003", "name": "Cotton Kurta", "category": "Traditional", "cost": 300, "price": 999, "sku_base": "CK003", "seasons": ["All-Season"]},
+    {"product_id": "PROD_DJ004", "name": "Denim Jeans", "category": "Bottomwear", "cost": 450, "price": 1499, "sku_base": "DJ004", "seasons": ["All-Season"]},
 ]
 
 # ============================================================================

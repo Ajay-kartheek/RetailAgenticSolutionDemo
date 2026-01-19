@@ -52,6 +52,32 @@ export interface DemandForecast {
   confidence: number;
 }
 
+export interface DemandInsight {
+  store_id: string;
+  product_id: string;
+  product_name: string;
+  category: string;
+  forecasted_demand: number;
+  current_stock: number;
+  confidence: number;
+  season: string;
+  period_start: string;
+  period_end: string;
+  stock_status: 'in_stock' | 'low_stock' | 'out_of_stock' | 'overstocked';
+  stock_to_demand_ratio: number;
+}
+
+export interface DemandInsightsResponse {
+  insights: DemandInsight[];
+  summary: {
+    total_items: number;
+    total_forecasted_demand: number;
+    average_confidence: number;
+    low_stock_items: number;
+    period: string;
+  };
+}
+
 export interface TrendAnalysis {
   product_id: string;
   store_id: string;
