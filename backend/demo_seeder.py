@@ -383,6 +383,40 @@ SCENARIO_4 = {
         {"store_id": "STORE_NGL", "product_id": "PROD_CK003", "quantity": 45, "days_ago": 1},
         {"store_id": "STORE_NGL", "product_id": "PROD_FS015", "quantity": 38, "days_ago": 2},
         {"store_id": "STORE_NGL", "product_id": "PROD_WS001", "quantity": 35, "days_ago": 1},
+        
+        # === TRENDING PRODUCTS - High sales exceeding forecasts ===
+        # Chennai - Sweaters selling like crazy (trending)
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 180, "days_ago": 3},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 195, "days_ago": 4},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 210, "days_ago": 5},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 188, "days_ago": 6},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "quantity": 175, "days_ago": 7},
+        
+        # Madurai - Traditional wear EXPLODING in sales (festival effect)
+        {"store_id": "STORE_MDU", "product_id": "PROD_CK003", "quantity": 320, "days_ago": 3},
+        {"store_id": "STORE_MDU", "product_id": "PROD_CK003", "quantity": 285, "days_ago": 4},
+        {"store_id": "STORE_MDU", "product_id": "PROD_CK003", "quantity": 350, "days_ago": 5},
+        {"store_id": "STORE_MDU", "product_id": "PROD_SK007", "quantity": 220, "days_ago": 3},
+        {"store_id": "STORE_MDU", "product_id": "PROD_SK007", "quantity": 195, "days_ago": 4},
+        
+        # Trichy - Athleisure viral trend
+        {"store_id": "STORE_TCH", "product_id": "PROD_JG018", "quantity": 280, "days_ago": 3},
+        {"store_id": "STORE_TCH", "product_id": "PROD_JG018", "quantity": 245, "days_ago": 4},
+        {"store_id": "STORE_TCH", "product_id": "PROD_JG018", "quantity": 310, "days_ago": 5},
+        {"store_id": "STORE_TCH", "product_id": "PROD_TH008", "quantity": 250, "days_ago": 3},
+        {"store_id": "STORE_TCH", "product_id": "PROD_TH008", "quantity": 220, "days_ago": 4},
+        
+        # Vellore - Student rush on casual wear
+        {"store_id": "STORE_VLR", "product_id": "PROD_DJ004", "quantity": 320, "days_ago": 3},
+        {"store_id": "STORE_VLR", "product_id": "PROD_DJ004", "quantity": 295, "days_ago": 4},
+        {"store_id": "STORE_VLR", "product_id": "PROD_CT012", "quantity": 285, "days_ago": 3},
+        {"store_id": "STORE_VLR", "product_id": "PROD_CT012", "quantity": 260, "days_ago": 4},
+        
+        # Thanjavur - Festival traditional rush
+        {"store_id": "STORE_TJV", "product_id": "PROD_SK007", "quantity": 280, "days_ago": 3},
+        {"store_id": "STORE_TJV", "product_id": "PROD_SK007", "quantity": 310, "days_ago": 4},
+        {"store_id": "STORE_TJV", "product_id": "PROD_CK003", "quantity": 350, "days_ago": 3},
+        {"store_id": "STORE_TJV", "product_id": "PROD_CK003", "quantity": 380, "days_ago": 4},
     ],
     "forecasts": [
         # Chennai - High forecasts (understocking expected)
