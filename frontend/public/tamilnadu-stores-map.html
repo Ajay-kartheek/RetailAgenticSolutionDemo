@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_86c3146994b02968d018f992273b5731 {
+                #map_74ced98245807b31b2006d36d2430e0d {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,14 +54,39 @@
 <body>
     
     
-            <div class="folium-map" id="map_86c3146994b02968d018f992273b5731" ></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            var circles = document.querySelectorAll('path.leaflet-interactive');
+            var storeData = [{"id": "STORE_CHN", "name": "SK Brands - Chennai", "status": "medium"}, {"id": "STORE_VLR", "name": "SK Brands - Vellore", "status": "low"}, {"id": "STORE_SLM", "name": "SK Brands - Salem", "status": "medium"}, {"id": "STORE_ERD", "name": "SK Brands - Erode", "status": "low"}, {"id": "STORE_TPR", "name": "SK Brands - Tiruppur", "status": "medium"}, {"id": "STORE_CBE", "name": "SK Brands - Coimbatore", "status": "low"}, {"id": "STORE_TCH", "name": "SK Brands - Trichy", "status": "medium"}, {"id": "STORE_TJV", "name": "SK Brands - Thanjavur", "status": "low"}, {"id": "STORE_MDU", "name": "SK Brands - Madurai", "status": "critical"}, {"id": "STORE_NGL", "name": "SK Brands - Nagercoil", "status": "low"}];
+            
+            circles.forEach(function(circle, index) {
+                if (index < storeData.length) {
+                    circle.style.cursor = 'pointer';
+                    circle.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        window.parent.postMessage({
+                            type: 'storeSelected',
+                            storeId: storeData[index].id,
+                            storeName: storeData[index].name,
+                            status: storeData[index].status
+                        }, '*');
+                    });
+                }
+            });
+        }, 500);
+    });
+    </script>
+    
+    
+            <div class="folium-map" id="map_74ced98245807b31b2006d36d2430e0d" ></div>
         
 </body>
 <script>
     
     
-            var map_86c3146994b02968d018f992273b5731 = L.map(
-                "map_86c3146994b02968d018f992273b5731",
+            var map_74ced98245807b31b2006d36d2430e0d = L.map(
+                "map_74ced98245807b31b2006d36d2430e0d",
                 {
                     center: [10.8, 78.5],
                     crs: L.CRS.EPSG3857,
@@ -80,7 +105,7 @@
 
         
     
-            var tile_layer_4a056a47b1d3cb694e6a210ee799b397 = L.tileLayer(
+            var tile_layer_1ee7f078aeec514aa3f7bfa478b065cf = L.tileLayer(
                 "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
                 {
   "minZoom": 0,
@@ -97,33 +122,16 @@
             );
         
     
-            tile_layer_4a056a47b1d3cb694e6a210ee799b397.addTo(map_86c3146994b02968d018f992273b5731);
+            tile_layer_1ee7f078aeec514aa3f7bfa478b065cf.addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-            var circle_marker_138d520f7d5cd3782c14fdaf6e123387 = L.circleMarker(
+            var circle_marker_0736ab78abfea2bce9c0bc0eb9f8c982 = L.circleMarker(
                 [13.0827, 80.2707],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_74261870fa8131115cc8708e47c942c5 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_fa1ee186b5876dd3f2e0129cbd2d8a8c = $(`<div id="html_fa1ee186b5876dd3f2e0129cbd2d8a8c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Chennai</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_CHN</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: blue; font-weight: 600;">MEDIUM</span>             </p>         </div>         </div>`)[0];
-                popup_74261870fa8131115cc8708e47c942c5.setContent(html_fa1ee186b5876dd3f2e0129cbd2d8a8c);
-            
-        
-
-        circle_marker_138d520f7d5cd3782c14fdaf6e123387.bindPopup(popup_74261870fa8131115cc8708e47c942c5)
-        ;
-
-        
-    
-    
-            circle_marker_138d520f7d5cd3782c14fdaf6e123387.bindTooltip(
+            circle_marker_0736ab78abfea2bce9c0bc0eb9f8c982.bindTooltip(
                 `<div>
                      SK Brands - Chennai
                  </div>`,
@@ -133,30 +141,13 @@
             );
         
     
-            var circle_marker_d98d988a03acb3548e5f05a1e3465d17 = L.circleMarker(
+            var circle_marker_65fda55f5613c3f47b0c06c62d71a499 = L.circleMarker(
                 [12.9184, 79.1325],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_3643376840b99340b8b31043aabc5ba0 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_2f4ac2b4e14548d45ad376bf5ad15d01 = $(`<div id="html_2f4ac2b4e14548d45ad376bf5ad15d01" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Vellore</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_VLR</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: green; font-weight: 600;">LOW</span>             </p>         </div>         </div>`)[0];
-                popup_3643376840b99340b8b31043aabc5ba0.setContent(html_2f4ac2b4e14548d45ad376bf5ad15d01);
-            
-        
-
-        circle_marker_d98d988a03acb3548e5f05a1e3465d17.bindPopup(popup_3643376840b99340b8b31043aabc5ba0)
-        ;
-
-        
-    
-    
-            circle_marker_d98d988a03acb3548e5f05a1e3465d17.bindTooltip(
+            circle_marker_65fda55f5613c3f47b0c06c62d71a499.bindTooltip(
                 `<div>
                      SK Brands - Vellore
                  </div>`,
@@ -166,30 +157,13 @@
             );
         
     
-            var circle_marker_8ed3ce3b107a26d3bb91358330c5dae3 = L.circleMarker(
+            var circle_marker_a2d213e14ee5e4331013741743a7ffc1 = L.circleMarker(
                 [11.6512, 78.1587],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_2d999adc0c310229639d2204f67e09f1 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_2447f25b6baf78cd5241074ea049428b = $(`<div id="html_2447f25b6baf78cd5241074ea049428b" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Salem</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_SLM</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: blue; font-weight: 600;">MEDIUM</span>             </p>         </div>         </div>`)[0];
-                popup_2d999adc0c310229639d2204f67e09f1.setContent(html_2447f25b6baf78cd5241074ea049428b);
-            
-        
-
-        circle_marker_8ed3ce3b107a26d3bb91358330c5dae3.bindPopup(popup_2d999adc0c310229639d2204f67e09f1)
-        ;
-
-        
-    
-    
-            circle_marker_8ed3ce3b107a26d3bb91358330c5dae3.bindTooltip(
+            circle_marker_a2d213e14ee5e4331013741743a7ffc1.bindTooltip(
                 `<div>
                      SK Brands - Salem
                  </div>`,
@@ -199,30 +173,13 @@
             );
         
     
-            var circle_marker_6842ebe9434b246650bcc1595ad7cbe2 = L.circleMarker(
+            var circle_marker_e5a24622365846466687e520d80596a9 = L.circleMarker(
                 [11.3428, 77.7274],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_d1d11739bc0c9b09dbe472f40849cdd1 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_038738c73bd9cc1b97466d4dcd820eae = $(`<div id="html_038738c73bd9cc1b97466d4dcd820eae" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Erode</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_ERD</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: green; font-weight: 600;">LOW</span>             </p>         </div>         </div>`)[0];
-                popup_d1d11739bc0c9b09dbe472f40849cdd1.setContent(html_038738c73bd9cc1b97466d4dcd820eae);
-            
-        
-
-        circle_marker_6842ebe9434b246650bcc1595ad7cbe2.bindPopup(popup_d1d11739bc0c9b09dbe472f40849cdd1)
-        ;
-
-        
-    
-    
-            circle_marker_6842ebe9434b246650bcc1595ad7cbe2.bindTooltip(
+            circle_marker_e5a24622365846466687e520d80596a9.bindTooltip(
                 `<div>
                      SK Brands - Erode
                  </div>`,
@@ -232,30 +189,13 @@
             );
         
     
-            var circle_marker_9d2793f69808b8938cd6041ff05e771e = L.circleMarker(
+            var circle_marker_51bcb2dc32c8457b7d5f9c5ca16fac0b = L.circleMarker(
                 [11.1154, 77.3546],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_73127f8a53017014ed5a53ce94b1db0f = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_ab87fe2b56a43493018f0dce95d12481 = $(`<div id="html_ab87fe2b56a43493018f0dce95d12481" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Tiruppur</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_TPR</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: blue; font-weight: 600;">MEDIUM</span>             </p>         </div>         </div>`)[0];
-                popup_73127f8a53017014ed5a53ce94b1db0f.setContent(html_ab87fe2b56a43493018f0dce95d12481);
-            
-        
-
-        circle_marker_9d2793f69808b8938cd6041ff05e771e.bindPopup(popup_73127f8a53017014ed5a53ce94b1db0f)
-        ;
-
-        
-    
-    
-            circle_marker_9d2793f69808b8938cd6041ff05e771e.bindTooltip(
+            circle_marker_51bcb2dc32c8457b7d5f9c5ca16fac0b.bindTooltip(
                 `<div>
                      SK Brands - Tiruppur
                  </div>`,
@@ -265,30 +205,13 @@
             );
         
     
-            var circle_marker_5357fffbbef6f749cc97f7027552d787 = L.circleMarker(
+            var circle_marker_e7fa42639954a47650a78bdf989c3e47 = L.circleMarker(
                 [11.0056, 76.9661],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_e982ae428b5ac81ae565da13973db241 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_1a1d825fc9ad325f628ce6bacfb3b166 = $(`<div id="html_1a1d825fc9ad325f628ce6bacfb3b166" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Coimbatore</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_CBE</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: green; font-weight: 600;">LOW</span>             </p>         </div>         </div>`)[0];
-                popup_e982ae428b5ac81ae565da13973db241.setContent(html_1a1d825fc9ad325f628ce6bacfb3b166);
-            
-        
-
-        circle_marker_5357fffbbef6f749cc97f7027552d787.bindPopup(popup_e982ae428b5ac81ae565da13973db241)
-        ;
-
-        
-    
-    
-            circle_marker_5357fffbbef6f749cc97f7027552d787.bindTooltip(
+            circle_marker_e7fa42639954a47650a78bdf989c3e47.bindTooltip(
                 `<div>
                      SK Brands - Coimbatore
                  </div>`,
@@ -298,30 +221,13 @@
             );
         
     
-            var circle_marker_9a3ed042ca871fdc633c6ca67d836339 = L.circleMarker(
+            var circle_marker_3933f243f7b87f4fd4f4e1783bd73c4c = L.circleMarker(
                 [10.8155, 78.6965],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_88482d10b2d02ee108fe957c9fa04a5b = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_3b71c51562c8ca92cf4a0973012f806c = $(`<div id="html_3b71c51562c8ca92cf4a0973012f806c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Trichy</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_TCH</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: blue; font-weight: 600;">MEDIUM</span>             </p>         </div>         </div>`)[0];
-                popup_88482d10b2d02ee108fe957c9fa04a5b.setContent(html_3b71c51562c8ca92cf4a0973012f806c);
-            
-        
-
-        circle_marker_9a3ed042ca871fdc633c6ca67d836339.bindPopup(popup_88482d10b2d02ee108fe957c9fa04a5b)
-        ;
-
-        
-    
-    
-            circle_marker_9a3ed042ca871fdc633c6ca67d836339.bindTooltip(
+            circle_marker_3933f243f7b87f4fd4f4e1783bd73c4c.bindTooltip(
                 `<div>
                      SK Brands - Trichy
                  </div>`,
@@ -331,30 +237,13 @@
             );
         
     
-            var circle_marker_06e366adf171324548bd1117363b52c1 = L.circleMarker(
+            var circle_marker_ffa61284a99161ecbf12eabb6314a172 = L.circleMarker(
                 [10.787, 79.1378],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_cf017e2814c7f5d4559c32342eac6728 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_5370f3d612cda6f22b8ecfc491d88adb = $(`<div id="html_5370f3d612cda6f22b8ecfc491d88adb" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Thanjavur</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_TJV</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: green; font-weight: 600;">LOW</span>             </p>         </div>         </div>`)[0];
-                popup_cf017e2814c7f5d4559c32342eac6728.setContent(html_5370f3d612cda6f22b8ecfc491d88adb);
-            
-        
-
-        circle_marker_06e366adf171324548bd1117363b52c1.bindPopup(popup_cf017e2814c7f5d4559c32342eac6728)
-        ;
-
-        
-    
-    
-            circle_marker_06e366adf171324548bd1117363b52c1.bindTooltip(
+            circle_marker_ffa61284a99161ecbf12eabb6314a172.bindTooltip(
                 `<div>
                      SK Brands - Thanjavur
                  </div>`,
@@ -364,30 +253,13 @@
             );
         
     
-            var circle_marker_1f231dbbe5a0f54394c004fbc0635c82 = L.circleMarker(
+            var circle_marker_2654154fb11030f43614463223fae438 = L.circleMarker(
                 [9.919, 78.1195],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_ae5e1a804d089ab86383dda9dfeec50d = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_ade7bfb0710bd7634feabd35f737602e = $(`<div id="html_ade7bfb0710bd7634feabd35f737602e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Madurai</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_MDU</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: red; font-weight: 600;">CRITICAL</span>             </p>         </div>         </div>`)[0];
-                popup_ae5e1a804d089ab86383dda9dfeec50d.setContent(html_ade7bfb0710bd7634feabd35f737602e);
-            
-        
-
-        circle_marker_1f231dbbe5a0f54394c004fbc0635c82.bindPopup(popup_ae5e1a804d089ab86383dda9dfeec50d)
-        ;
-
-        
-    
-    
-            circle_marker_1f231dbbe5a0f54394c004fbc0635c82.bindTooltip(
+            circle_marker_2654154fb11030f43614463223fae438.bindTooltip(
                 `<div>
                      SK Brands - Madurai
                  </div>`,
@@ -397,30 +269,13 @@
             );
         
     
-            var circle_marker_52ec1920b1a23e0733fd6f2cdf58ce91 = L.circleMarker(
+            var circle_marker_c7d0cd37807a03a016c2aed086f5b9ee = L.circleMarker(
                 [8.178, 77.412],
                 {"bubblingMouseEvents": true, "color": "white", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 3}
-            ).addTo(map_86c3146994b02968d018f992273b5731);
+            ).addTo(map_74ced98245807b31b2006d36d2430e0d);
         
     
-        var popup_63a813aea6413c42cc411673a8b892c8 = L.popup({
-  "maxWidth": 200,
-});
-
-        
-            
-                var html_a2ec61ae6d398fb772a4048e28f3e9c3 = $(`<div id="html_a2ec61ae6d398fb772a4048e28f3e9c3" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; min-width: 150px;">             <h4 style="margin: 0 0 8px 0; color: #1e293b;">SK Brands - Nagercoil</h4>             <p style="margin: 0; color: #64748b; font-size: 12px;">ID: STORE_NGL</p>             <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">                 Status: <span style="color: green; font-weight: 600;">LOW</span>             </p>         </div>         </div>`)[0];
-                popup_63a813aea6413c42cc411673a8b892c8.setContent(html_a2ec61ae6d398fb772a4048e28f3e9c3);
-            
-        
-
-        circle_marker_52ec1920b1a23e0733fd6f2cdf58ce91.bindPopup(popup_63a813aea6413c42cc411673a8b892c8)
-        ;
-
-        
-    
-    
-            circle_marker_52ec1920b1a23e0733fd6f2cdf58ce91.bindTooltip(
+            circle_marker_c7d0cd37807a03a016c2aed086f5b9ee.bindTooltip(
                 `<div>
                      SK Brands - Nagercoil
                  </div>`,

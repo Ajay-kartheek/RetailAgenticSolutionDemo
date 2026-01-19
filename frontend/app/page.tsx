@@ -143,6 +143,22 @@ export default function Dashboard() {
     loadData();
   }, []);
 
+  // Listen for postMessage from Folium map iframe when a marker is clicked
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'storeSelected') {
+        const storeId = event.data.storeId;
+        const matchedStore = stores.find(s => s.id === storeId);
+        if (matchedStore) {
+          setSelectedStore(matchedStore);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [stores]);
+
   // Fetch details when store selected
   useEffect(() => {
     if (!selectedStore) return;

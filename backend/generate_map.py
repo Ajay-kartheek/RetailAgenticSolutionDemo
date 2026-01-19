@@ -3,7 +3,7 @@ Generate an interactive Folium map for Tamil Nadu store locations.
 This script creates an HTML file that can be embedded in the frontend.
 """
 import folium
-from folium.plugins import MarkerCluster
+import json
 
 # Tamil Nadu center coordinates
 TAMIL_NADU_CENTER = [10.8, 78.5]
@@ -22,14 +22,6 @@ STORE_LOCATIONS = [
     {"id": "STORE_NGL", "name": "SK Brands - Nagercoil", "lat": 8.1780, "lon": 77.4120, "status": "low"},
 ]
 
-# Status colors
-STATUS_COLORS = {
-    "critical": "red",
-    "high": "orange", 
-    "medium": "blue",
-    "low": "green"
-}
-
 def create_tamil_nadu_map():
     """Create an interactive Folium map of Tamil Nadu with store markers."""
     
@@ -44,30 +36,48 @@ def create_tamil_nadu_map():
     
     # Add store markers
     for store in STORE_LOCATIONS:
-        color = STATUS_COLORS.get(store["status"], "blue")
-        
-        # Create popup content
-        popup_html = f"""
-        <div style="font-family: Arial, sans-serif; min-width: 150px;">
-            <h4 style="margin: 0 0 8px 0; color: #1e293b;">{store['name']}</h4>
-            <p style="margin: 0; color: #64748b; font-size: 12px;">ID: {store['id']}</p>
-            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 12px;">
-                Status: <span style="color: {color}; font-weight: 600;">{store['status'].upper()}</span>
-            </p>
-        </div>
-        """
-        
-        folium.CircleMarker(
+        marker = folium.CircleMarker(
             location=[store["lat"], store["lon"]],
             radius=6,
-            popup=folium.Popup(popup_html, max_width=200),
             tooltip=store["name"],
             color="white",
             fill=True,
             fill_color="#3b82f6",
             fill_opacity=1,
             weight=3
-        ).add_to(m)
+        )
+        marker.add_to(m)
+    
+    # Add custom JavaScript to handle clicks and send postMessage to parent
+    store_data_json = json.dumps([{"id": s["id"], "name": s["name"], "status": s["status"]} for s in STORE_LOCATIONS])
+    
+    custom_js = f"""
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {{
+        setTimeout(function() {{
+            var circles = document.querySelectorAll('path.leaflet-interactive');
+            var storeData = {store_data_json};
+            
+            circles.forEach(function(circle, index) {{
+                if (index < storeData.length) {{
+                    circle.style.cursor = 'pointer';
+                    circle.addEventListener('click', function(e) {{
+                        e.stopPropagation();
+                        window.parent.postMessage({{
+                            type: 'storeSelected',
+                            storeId: storeData[index].id,
+                            storeName: storeData[index].name,
+                            status: storeData[index].status
+                        }}, '*');
+                    }});
+                }}
+            }});
+        }}, 500);
+    }});
+    </script>
+    """
+    
+    m.get_root().html.add_child(folium.Element(custom_js))
     
     return m
 
@@ -76,7 +86,6 @@ def main():
     print("Generating Tamil Nadu store map...")
     m = create_tamil_nadu_map()
     
-    # Save to frontend public folder
     output_path = "../frontend/public/tamilnadu-stores-map.html"
     m.save(output_path)
     print(f"Map saved to: {output_path}")
