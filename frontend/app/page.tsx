@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import { useAgentContext } from '@/context/AgentContext';
-import { getStores, getInventoryStatusSummary, getStoreInventory, getStoreForecasts, getProducts } from '@/lib/api';
+import { getStores, getInventoryStatusSummary, getStoreInventory, getStoreForecasts, getProducts, getDecisions } from '@/lib/api';
 import { Store } from '@/lib/types';
 import StoreAnalyticsModal from '@/components/StoreAnalyticsModal';
 
@@ -43,6 +43,11 @@ export default function Dashboard() {
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [fullInventory, setFullInventory] = useState<any[]>([]);
+  const [decisionsCount, setDecisionsCount] = useState<number>(0);
+  const [storesAtRisk, setStoresAtRisk] = useState<number>(0);
+  const [totalStores, setTotalStores] = useState<number>(0);
+  const [stockOutRiskCount, setStockOutRiskCount] = useState<number>(0);
+  const [replenishmentPending, setReplenishmentPending] = useState<number>(0);
   const [storeDetails, setStoreDetails] = useState<{
     loading: boolean;
     stockHealth: { critical: number, low: number, good: number };
@@ -65,11 +70,35 @@ export default function Dashboard() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [storesData, statusSummary, productsList] = await Promise.all([
+        const [storesData, statusSummary, productsList, allDecisionsData] = await Promise.all([
           getStores(),
           getInventoryStatusSummary(),
-          getProducts()
+          getProducts(),
+          getDecisions()
         ]);
+
+        // Set total decisions count (both pricing and replenishment)
+        setDecisionsCount(allDecisionsData?.length || 0);
+
+        // Calculate Stores at Risk (stores with understocked items)
+        const storesWithIssues = Object.entries(statusSummary.by_store || {}).filter(
+          ([_, counts]: [string, any]) => (counts.understocked || 0) > 0
+        ).length;
+        setStoresAtRisk(storesWithIssues);
+        setTotalStores(storesData.length);
+
+        // Calculate Stock-Out Risk SKUs (total understocked across all stores)
+        const totalUnderstocked = Object.values(statusSummary.by_store || {}).reduce(
+          (sum: number, counts: any) => sum + (counts.understocked || 0), 0
+        );
+        setStockOutRiskCount(totalUnderstocked as number);
+
+        // Calculate Replenishment Actions Pending
+        const pendingReplenishments = allDecisionsData?.filter(
+          (d: any) => (d.status === 'pending' || d.status === 'pending_approval') &&
+            d.decision_type?.includes('replenishment')
+        ).length || 0;
+        setReplenishmentPending(pendingReplenishments);
 
         // Create product map
         const prodMap: Record<string, string> = {};
@@ -245,10 +274,10 @@ export default function Dashboard() {
             {/* Stats Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '24px', marginBottom: '48px' }}>
               {[
-                { label: 'Active Agents', value: activeCount || '0', unit: 'Running', trend: '+2', color: 'text-blue-600', bg: 'bg-blue-50' },
-                { label: 'Warning Signals', value: '4', unit: 'Critical', trend: '-1', color: 'text-rose-600', bg: 'bg-rose-50' },
-                { label: 'Forecast Accuracy', value: '94.2%', unit: 'vs LME', trend: '+5.2%', color: 'text-emerald-600', bg: 'bg-emerald-50' },
-                { label: 'Pending Decisions', value: '12', unit: 'Actions', trend: '+3', color: 'text-gray-900', bg: 'bg-gray-100' },
+                { label: 'AI Decisions Generated', value: String(decisionsCount), unit: 'Decisions', trend: decisionsCount > 0 ? `+${decisionsCount}` : '0', color: 'text-blue-600', bg: 'bg-blue-50' },
+                { label: 'Stores at Risk', value: `${storesAtRisk} / ${totalStores}`, unit: 'Stores', trend: storesAtRisk > 0 ? `-${storesAtRisk}` : '0', color: 'text-rose-600', bg: 'bg-rose-50' },
+                { label: 'Stock-Out Risk SKUs', value: String(stockOutRiskCount), unit: 'SKUs', trend: stockOutRiskCount > 0 ? `-${stockOutRiskCount}` : '0', color: 'text-amber-600', bg: 'bg-amber-50' },
+                { label: 'Replenishment Pending', value: String(replenishmentPending), unit: 'Actions', trend: replenishmentPending > 0 ? `${replenishmentPending}` : '0', color: 'text-emerald-600', bg: 'bg-emerald-50' },
               ].map((stat, i) => (
                 <div key={i} style={{ padding: '24px' }} className="bg-white rounded-xl border border-gray-200 shadow-sm">
                   <div style={{ marginBottom: '16px' }} className="flex items-center justify-between">

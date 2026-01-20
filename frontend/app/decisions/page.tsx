@@ -125,7 +125,7 @@ export default function DecisionsPage() {
           <div>
             <h1 style={{ fontSize: '18px', fontWeight: 600 }} className="text-gray-900">Decision Queue</h1>
             <p style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
-              {decisions.filter(d => d.status === 'pending').length} actions require approval
+              {decisions.filter(d => d.status === 'pending' || d.status === 'pending_approval').length} actions require approval
             </p>
           </div>
 
