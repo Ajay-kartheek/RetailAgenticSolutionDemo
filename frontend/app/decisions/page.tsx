@@ -91,14 +91,28 @@ export default function DecisionsPage() {
     }
   };
 
+  const [typeFilter, setTypeFilter] = useState<'all' | 'pricing' | 'replenishment'>('all');
+
   const filteredDecisions = decisions.filter(d => {
+    // First filter by status
+    let matchesStatus = false;
     if (activeTab === 'Approved') {
-      return d.status === 'approved' || d.status === 'executed';
+      matchesStatus = d.status === 'approved' || d.status === 'executed';
+    } else if (activeTab === 'Pending') {
+      matchesStatus = d.status === 'pending' || d.status === 'pending_approval';
+    } else {
+      matchesStatus = d.status.toLowerCase() === activeTab.toLowerCase();
     }
-    if (activeTab === 'Pending') {
-      return d.status === 'pending' || d.status === 'pending_approval';
+
+    // Then filter by type
+    if (typeFilter === 'all') {
+      return matchesStatus;
+    } else if (typeFilter === 'pricing') {
+      return matchesStatus && d.decision_type?.includes('pricing');
+    } else if (typeFilter === 'replenishment') {
+      return matchesStatus && d.decision_type?.includes('replenishment');
     }
-    return d.status.toLowerCase() === activeTab.toLowerCase();
+    return matchesStatus;
   });
 
   return (
@@ -143,18 +157,63 @@ export default function DecisionsPage() {
         <div style={{ padding: '24px 32px' }} className="flex-1 overflow-y-auto">
           <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 
-            {/* Search Bar */}
-            <div style={{ marginBottom: '24px', padding: '8px 16px', borderRadius: '12px', display: 'flex', alignItems: 'center', gap: '12px' }} className="bg-white border border-gray-200 shadow-sm">
-              <Search style={{ width: '16px', height: '16px', color: '#94a3b8' }} />
-              <input
-                type="text"
-                placeholder="Search by decision type, ID, or description..."
-                style={{ flex: 1, height: '40px', fontSize: '13px', border: 'none', outline: 'none', backgroundColor: 'transparent' }}
-                className="placeholder:text-gray-400"
-              />
-              <button style={{ padding: '8px 14px', fontSize: '12px', fontWeight: 600, borderRadius: '8px' }} className="bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 transition-colors">
-                Filter
-              </button>
+            {/* Decision Type Filter Tabs */}
+            <div style={{ marginBottom: '24px', display: 'flex', gap: '8px', backgroundColor: '#f8fafc', padding: '6px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              {[
+                { key: 'all', label: 'All' },
+                { key: 'pricing', label: 'Pricing' },
+                { key: 'replenishment', label: 'Replenishment' }
+              ].map((type) => {
+                const count = decisions.filter(d => {
+                  const matchesStatus = activeTab === 'Approved'
+                    ? (d.status === 'approved' || d.status === 'executed')
+                    : activeTab === 'Pending'
+                      ? (d.status === 'pending' || d.status === 'pending_approval')
+                      : d.status.toLowerCase() === activeTab.toLowerCase();
+                  if (type.key === 'all') return matchesStatus;
+                  if (type.key === 'pricing') return matchesStatus && d.decision_type?.includes('pricing');
+                  if (type.key === 'replenishment') return matchesStatus && d.decision_type?.includes('replenishment');
+                  return matchesStatus;
+                }).length;
+
+                return (
+                  <button
+                    key={type.key}
+                    onClick={() => setTypeFilter(type.key as 'all' | 'pricing' | 'replenishment')}
+                    style={{
+                      flex: 1,
+                      padding: '10px 16px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      borderRadius: '8px',
+                      backgroundColor: typeFilter === type.key ? 'white' : 'transparent',
+                      color: typeFilter === type.key ? '#0f172a' : '#64748b',
+                      border: 'none',
+                      boxShadow: typeFilter === type.key ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    {type.label}
+                    <span style={{
+                      backgroundColor: typeFilter === type.key ? '#0f172a' : '#cbd5e1',
+                      color: 'white',
+                      padding: '2px 8px',
+                      borderRadius: '10px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      minWidth: '24px',
+                      textAlign: 'center'
+                    }}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             {loading ? (

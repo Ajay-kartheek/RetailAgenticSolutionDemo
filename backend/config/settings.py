@@ -99,6 +99,10 @@ class Settings(BaseSettings):
         return f"{self.table_prefix}agent_activity"
 
     @property
+    def agent_insights_table(self) -> str:
+        return f"{self.table_prefix}agent_insights"
+
+    @property
     def is_development(self) -> bool:
         return self.app_env == "development"
 

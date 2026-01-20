@@ -209,6 +209,11 @@ export const getAgentHistory = async () => {
   return data.history;
 };
 
+export const getAgentStatus = async () => {
+  const { data } = await api.get('/agents/status');
+  return data;
+};
+
 // Demand Insights
 export const getDemandInsights = async (storeId?: string, period: string = '2026-Q1') => {
   const params = new URLSearchParams();

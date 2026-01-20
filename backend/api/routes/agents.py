@@ -67,6 +67,50 @@ async def get_agents_history():
         return {"error": str(e), "history": {}}
 
 
+def _get_stored_insights(agent_type: str, period: str = "2026-Q1"):
+    """
+    Get stored insights for an agent type.
+    Returns None if no stored insights exist (agent hasn't run yet).
+    """
+    db = DynamoDBClient()
+    try:
+        # Query the agent_insights table for this agent type
+        items = db.scan(settings.agent_insights_table)
+        # Filter by agent_type and period
+        matching = [i for i in items if i.get("agent_type") == agent_type and i.get("forecast_period") == period]
+        if matching:
+            # Return the most recent one (by timestamp)
+            matching.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+            return matching[0]
+        return None
+    except Exception as e:
+        logger.error(f"Error fetching stored insights for {agent_type}: {e}")
+        return None
+
+
+def _check_agent_has_run() -> bool:
+    """Check if any agent analysis has been run (agent_insights table has data)."""
+    db = DynamoDBClient()
+    try:
+        items = db.scan(settings.agent_insights_table)
+        return len(items) > 0
+    except Exception:
+        return False
+
+
+@router.get("/status")
+async def get_agents_status():
+    """
+    Check if agent analysis has been run.
+    Returns has_data: True if agents have run and stored insights.
+    """
+    has_data = _check_agent_has_run()
+    return {
+        "has_data": has_data,
+        "message": "Agent analysis data available" if has_data else "No agent analysis run yet. Please run 'Agent Analysis' first."
+    }
+
+
 @router.get("/demand/insights")
 async def get_demand_insights(store_id: str = None, period: str = "2026-Q1"):
     """

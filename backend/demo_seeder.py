@@ -658,28 +658,60 @@ def seed_sales(scenario: dict):
         count += 1
     print(f"  ✓ Added {count} sales records")
 
-def seed_forecasts(scenario: dict):
-    """Seed ML demand forecasts."""
+def seed_forecasts(scenario: dict, stores: list):
+    """Seed ML demand forecasts for ALL product-store combinations."""
+    import random
     print("\n📊 Seeding demand forecasts...")
     forecast_period = "2026-Q1"
-    for fc in scenario["forecasts"]:
-        product = next((p for p in PRODUCTS if p["product_id"] == fc["product_id"]), None)
-        if not product:
-            continue
-        
-        item = {
-            "product_store_id": f"{fc['product_id']}#{fc['store_id']}",
-            "forecast_period": forecast_period,
-            "store_id": fc["store_id"],
-            "product_id": fc["product_id"],
-            "product_name": product["name"],
-            "forecasted_demand": fc["forecasted_demand"],
-            "confidence": fc["confidence"],
-            "model_version": "demo-v1",
-            "generated_at": datetime.utcnow().isoformat(),
-        }
-        put_item(settings.demand_forecast_table, item)
-    print(f"  ✓ Added {len(scenario['forecasts'])} forecasts")
+    
+    # Create lookup for explicit forecasts
+    explicit_forecasts = {}
+    for fc in scenario.get("forecasts", []):
+        key = f"{fc['store_id']}#{fc['product_id']}"
+        explicit_forecasts[key] = fc
+    
+    count = 0
+    for store in stores:
+        store_id = store["store_id"]
+        for product in PRODUCTS:
+            product_id = product["product_id"]
+            key = f"{store_id}#{product_id}"
+            
+            # Use explicit forecast if available, otherwise generate a reasonable default
+            if key in explicit_forecasts:
+                fc = explicit_forecasts[key]
+                forecasted_demand = fc["forecasted_demand"]
+                confidence = fc["confidence"]
+            else:
+                # Generate default forecast based on category and store type
+                # Base demand between 400-900 with some variance
+                base_demand = random.randint(400, 900)
+                
+                # Adjust based on category popularity
+                category = product.get("category", "")
+                if category in ["Traditional", "Bottomwear"]:
+                    base_demand = int(base_demand * 1.2)
+                elif category in ["Winterwear", "Formalwear"]:
+                    base_demand = int(base_demand * 0.8)
+                
+                forecasted_demand = base_demand
+                confidence = round(random.uniform(0.75, 0.92), 2)
+            
+            item = {
+                "product_store_id": f"{product_id}#{store_id}",
+                "forecast_period": forecast_period,
+                "store_id": store_id,
+                "product_id": product_id,
+                "product_name": product["name"],
+                "forecasted_demand": forecasted_demand,
+                "confidence": confidence,
+                "model_version": "demo-v1",
+                "generated_at": datetime.utcnow().isoformat(),
+            }
+            put_item(settings.demand_forecast_table, item)
+            count += 1
+    
+    print(f"  ✓ Added {count} forecasts (all product-store combinations)")
 
 def clear_all_data():
     """Clear demo tables."""
@@ -690,6 +722,8 @@ def clear_all_data():
         settings.demand_forecast_table,
         settings.decisions_table,
         settings.agent_activity_table,
+        settings.agent_insights_table,
+        settings.agent_runs_table,
     ]
     for table in tables:
         clear_table(table)
@@ -716,7 +750,7 @@ def seed_scenario(scenario_num: int):
     seed_transfer_routes(stores)
     seed_inventory(scenario, stores)
     seed_sales(scenario)
-    seed_forecasts(scenario)
+    seed_forecasts(scenario, stores)
     
     print(f"\n{'='*60}")
     print(f"✅ SCENARIO {scenario_num} READY!")

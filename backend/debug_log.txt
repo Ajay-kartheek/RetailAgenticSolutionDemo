@@ -350,3 +350,19 @@
 2026-01-19 17:57:56.751914: Stored inventory_agent for run RUN_20260119175359_8FCDB9
 2026-01-19 17:57:56.968630: Stored replenishment_agent for run RUN_20260119175359_8FCDB9
 2026-01-19 17:57:57.182739: Stored pricing_agent for run RUN_20260119175359_8FCDB9
+2026-01-19 17:19:57.478855: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-19 17:19:57.478877: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-19 17:20:20.483978: Raw LLM Response length: 5195
+2026-01-19 17:20:20.483989: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 20,125 units across all stores with 84% average forecast confidence. High demand items include Patiala Suit at TPR (1,016 units) 
+2026-01-19 22:50:21.411777: Stored demand_agent for run RUN_20260119224645_704BAC
+2026-01-19 22:50:21.713693: Stored trend_agent for run RUN_20260119224645_704BAC
+2026-01-19 22:50:22.010875: Stored inventory_agent for run RUN_20260119224645_704BAC
+2026-01-19 22:50:22.307023: Stored replenishment_agent for run RUN_20260119224645_704BAC
+2026-01-19 22:50:22.635015: Stored pricing_agent for run RUN_20260119224645_704BAC
+2026-01-19 22:50:26.746621: Stored 200 insights for demand
+2026-01-19 22:50:29.652606: Stored 200 insights for trend
+2026-01-19 22:50:32.593161: Stored 200 insights for inventory
+2026-01-19 22:51:02.601235: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-19 22:51:17.329892: Stored 20 insights for pricing

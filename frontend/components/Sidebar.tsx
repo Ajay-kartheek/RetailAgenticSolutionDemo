@@ -23,7 +23,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Agent Insights', href: '/agents', icon: Brain },
+  { name: 'Agent Network', href: '/agents', icon: Brain },
   { name: 'Decisions', href: '/decisions', icon: ClipboardCheck },
   { name: 'Trends & Campaigns', href: '/trends', icon: TrendingUp },
   { name: 'Settings', href: '/settings', icon: Settings },

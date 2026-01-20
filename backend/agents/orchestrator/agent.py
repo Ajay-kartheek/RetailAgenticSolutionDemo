@@ -304,6 +304,8 @@ Your goal: Run specialist agents to analyze demand, trends, inventory, replenish
                     try:
                         structured_results = self._generate_structured_summaries(results)
                         self._store_agent_results(run_id, structured_results)
+                        # Store detailed insights for table display
+                        self._store_detailed_insights(run_id, forecast_period)
                         # Add to final results
                         results["structured_agent_outputs"] = structured_results
                     except Exception as e:
@@ -728,6 +730,56 @@ Your goal: Run specialist agents to analyze demand, trends, inventory, replenish
             except Exception as e:
                 with open("debug_log.txt", "a") as f:
                     f.write(f"{datetime.now()}: Error storing item {agent_id}: {e}\n")
+
+    def _store_detailed_insights(self, run_id: str, forecast_period: str):
+        """
+        Compute and store detailed table insights from each agent.
+        This data will be read by the /agents/*/insights endpoints.
+        """
+        from datetime import datetime
+        import requests
+        
+        db = DynamoDBClient()
+        timestamp = datetime.utcnow().isoformat()
+        
+        # Base URL for internal API calls
+        base_url = "http://localhost:8000"
+        
+        agent_endpoints = {
+            "demand": f"{base_url}/agents/demand/insights?period={forecast_period}",
+            "trend": f"{base_url}/agents/trend/insights?period={forecast_period}",
+            "inventory": f"{base_url}/agents/inventory/insights?period={forecast_period}",
+            "replenishment": f"{base_url}/agents/replenishment/insights?period={forecast_period}",
+            "pricing": f"{base_url}/agents/pricing/insights?period={forecast_period}",
+        }
+        
+        for agent_type, endpoint in agent_endpoints.items():
+            try:
+                # Call the insights endpoint to get computed data
+                response = requests.get(endpoint, timeout=30)
+                if response.status_code == 200:
+                    data = response.json()
+                    
+                    # Store in agent_insights table
+                    item = {
+                        "agent_type": agent_type,
+                        "run_id": run_id,
+                        "timestamp": timestamp,
+                        "insights": data.get("insights", []),
+                        "summary": data.get("summary", {}),
+                        "forecast_period": forecast_period,
+                    }
+                    db.put_item(settings.agent_insights_table, item)
+                    
+                    with open("debug_log.txt", "a") as f:
+                        f.write(f"{datetime.now()}: Stored {len(item.get('insights', []))} insights for {agent_type}\n")
+                else:
+                    with open("debug_log.txt", "a") as f:
+                        f.write(f"{datetime.now()}: Failed to fetch {agent_type} insights: {response.status_code}\n")
+                        
+            except Exception as e:
+                with open("debug_log.txt", "a") as f:
+                    f.write(f"{datetime.now()}: Error storing detailed insights for {agent_type}: {e}\n")
 
 
 def create_orchestrator_agent(bedrock_client: Any = None) -> OrchestratorAgent:

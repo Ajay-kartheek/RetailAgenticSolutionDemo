@@ -2,36 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import {
-  Play,
   Loader2,
-  Brain,
   TrendingUp as TrendIcon,
   BarChart3,
-  Package,
-  Truck,
-  Tag,
-  Palette,
-  Search,
   Bell,
   MapPin,
   ArrowUpRight
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
-import AgentActivityPanel from '@/components/AgentActivityPanel';
 import { useAgentContext } from '@/context/AgentContext';
 import { getStores, getInventoryStatusSummary, getStoreInventory, getStoreForecasts, getProducts } from '@/lib/api';
 import { Store } from '@/lib/types';
 import StoreAnalyticsModal from '@/components/StoreAnalyticsModal';
-
-const agents = [
-  { id: 'orchestrator', name: 'Orchestrator', icon: Brain, color: 'text-purple-600', bg: 'bg-purple-100' },
-  { id: 'demand_agent', name: 'Demand Forecasting', icon: TrendIcon, color: 'text-blue-600', bg: 'bg-blue-100' },
-  { id: 'trend_agent', name: 'Trend Watcher', icon: BarChart3, color: 'text-indigo-600', bg: 'bg-indigo-100' },
-  { id: 'inventory_agent', name: 'Inventory Optimizer', icon: Package, color: 'text-amber-600', bg: 'bg-amber-100' },
-  { id: 'replenishment_agent', name: 'Store Replenishment', icon: Truck, color: 'text-emerald-600', bg: 'bg-emerald-100' },
-  { id: 'pricing_agent', name: 'Pricing & Promotion', icon: Tag, color: 'text-orange-600', bg: 'bg-orange-100' },
-  { id: 'campaign_agent', name: 'Brand Campaign', icon: Palette, color: 'text-pink-600', bg: 'bg-pink-100' },
-];
 
 // Map stores to visual coordinates - positioned for the visible map area
 // Coordinates are percentages within the container, centered on the map
@@ -47,8 +29,6 @@ const STORE_COORDINATES: Record<string, { x: number; y: number }> = {
   'STORE_MDU': { x: 46, y: 68 },   // Madurai - south central
   'STORE_NGL': { x: 40, y: 82 },   // Nagercoil - southern tip
 };
-
-
 
 const statusColors = {
   critical: 'bg-rose-500',
@@ -75,8 +55,11 @@ export default function Dashboard() {
     topDemand: []
   });
 
-  // Use global context
-  const { isRunning, isExecuting, agentStatuses, activityMessages, startAnalysis } = useAgentContext();
+  // Use global context (for active agents count in sidebar)
+  const { agentStatuses } = useAgentContext();
+
+  // Derived state for sidebar
+  const activeCount = Object.values(agentStatuses).filter(s => s.status === 'running').length;
 
   // Load initial store data and products
   useEffect(() => {
@@ -228,29 +211,6 @@ export default function Dashboard() {
 
     fetchDetails();
   }, [selectedStore, products]);
-
-  // Derived state
-  const activeCount = Object.values(agentStatuses).filter(s => s.status === 'running').length;
-
-  const activeAgents = Object.values(agentStatuses)
-    .filter(s => s.status === 'running')
-    .map(s => s.id);
-
-  // Map context messages to panel format
-  const panelMessages = activityMessages.map(m => ({
-    id: m.id,
-    agent_name: m.agentId,
-    type: (m.type === 'thinking' ? 'thinking' :
-      m.type === 'error' ? 'error' :
-        m.type === 'success' ? 'result' : 'communication') as any,
-    message: m.message,
-    thinking: m.type === 'thinking' ? m.message : undefined,
-    timestamp: new Date(m.timestamp)
-  })).reverse();
-
-  const handleRun = async () => {
-    await startAnalysis();
-  };
 
   return (
     <div className="flex h-screen w-full bg-gray-100 font-sans overflow-hidden">
@@ -452,88 +412,6 @@ export default function Dashboard() {
                   </div>
                 )}
               </div>
-            </div>
-
-            {/* Agent Network */}
-            <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-              <div style={{ padding: '20px 32px' }} className="border-b border-gray-100 flex items-center justify-between">
-                <div>
-                  <h3 style={{ fontSize: '18px', fontWeight: 600 }} className="text-gray-900">AI Agent Network</h3>
-                  <p style={{ fontSize: '14px', marginTop: '4px' }} className="text-gray-500">{agents.length} agents available</p>
-                </div>
-                <button
-                  onClick={handleRun}
-                  disabled={isRunning}
-                  style={{ padding: '10px 20px', fontSize: '14px', gap: '8px' }}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg transition-colors flex items-center"
-                >
-                  {isRunning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-                  {isRunning ? 'Running...' : 'Run Analysis'}
-                </button>
-              </div>
-
-              {/* Agent Cards Grid */}
-              <div style={{ padding: '20px 32px' }}>
-                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7" style={{ gap: '10px' }}>
-                  {agents.map(agent => {
-                    const Icon = agent.icon;
-                    const isActive = activeAgents.includes(agent.id);
-                    return (
-                      <div
-                        key={agent.id}
-                        style={{ padding: '14px 10px', minWidth: '100px' }}
-                        className={`rounded-lg border transition-all ${isActive
-                          ? 'border-purple-300 bg-purple-50 shadow-md'
-                          : 'border-gray-200 bg-gray-50'
-                          }`}
-                      >
-                        <div className="flex flex-col items-center text-center">
-                          <div
-                            style={{ width: '36px', height: '36px', marginBottom: '8px', position: 'relative' }}
-                            className={`rounded-lg ${agent.bg} flex items-center justify-center flex-shrink-0`}
-                          >
-                            <Icon style={{ width: '18px', height: '18px' }} className={agent.color} />
-                            {isActive && (
-                              <div className="absolute inset-0 rounded-lg border-2 border-purple-400 animate-ping opacity-40" />
-                            )}
-                          </div>
-                          {/* Fixed height name area for alignment */}
-                          <div style={{ height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <h4 style={{ fontSize: '11px', fontWeight: 600, lineHeight: 1.2 }} className="text-gray-900">{agent.name}</h4>
-                          </div>
-                          <div style={{ gap: '4px', height: '14px' }} className="flex items-center">
-                            {isActive ? (
-                              <div className="flex gap-0.5">
-                                {[0, 1, 2].map(i => (
-                                  <div
-                                    key={i}
-                                    className="w-1 h-1 rounded-full bg-purple-500 animate-pulse"
-                                    style={{ animationDelay: `${i * 200}ms` }}
-                                  />
-                                ))}
-                              </div>
-                            ) : (
-                              <>
-                                <span style={{ width: '5px', height: '5px' }} className="rounded-full bg-gray-300"></span>
-                                <span style={{ fontSize: '9px' }} className="text-gray-400">Idle</span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Agent Activity Panel - Live Feed */}
-            <div style={{ marginTop: '20px' }}>
-              <AgentActivityPanel
-                messages={panelMessages}
-                activeAgents={activeAgents}
-                isRunning={isRunning || isExecuting}
-              />
             </div>
 
           </div>
