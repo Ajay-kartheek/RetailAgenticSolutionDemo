@@ -60,11 +60,12 @@ export default function Sidebar({
               width: '36px',
               height: '36px',
               borderRadius: '10px',
-              backgroundColor: '#3b82f6'
+              overflow: 'hidden'
             }}
-            className="flex items-center justify-center shrink-0 text-white"
+            className="flex items-center justify-center shrink-0"
           >
-            <Zap style={{ width: '20px', height: '20px' }} className="fill-current" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
           <AnimatePresence mode="wait">
             {!isCollapsed && (

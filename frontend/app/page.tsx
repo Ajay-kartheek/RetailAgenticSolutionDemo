@@ -44,6 +44,7 @@ export default function Dashboard() {
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [fullInventory, setFullInventory] = useState<any[]>([]);
   const [decisionsCount, setDecisionsCount] = useState<number>(0);
+  const [pricingDecisionsCount, setPricingDecisionsCount] = useState<number>(0);
   const [storesAtRisk, setStoresAtRisk] = useState<number>(0);
   const [totalStores, setTotalStores] = useState<number>(0);
   const [stockOutRiskCount, setStockOutRiskCount] = useState<number>(0);
@@ -79,6 +80,12 @@ export default function Dashboard() {
 
         // Set total decisions count (both pricing and replenishment)
         setDecisionsCount(allDecisionsData?.length || 0);
+
+        // Calculate Pricing Decisions count
+        const pricingCount = allDecisionsData?.filter(
+          (d: any) => d.decision_type?.includes('pricing')
+        ).length || 0;
+        setPricingDecisionsCount(pricingCount);
 
         // Calculate Stores at Risk (stores with understocked items)
         const storesWithIssues = Object.entries(statusSummary.by_store || {}).filter(
@@ -269,12 +276,12 @@ export default function Dashboard() {
 
         {/* Content */}
         <div className="flex-1 overflow-y-auto" style={{ padding: '40px' }}>
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
 
             {/* Stats Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" style={{ gap: '24px', marginBottom: '48px' }}>
               {[
-                { label: 'AI Decisions Generated', value: String(decisionsCount), unit: 'Decisions', trend: decisionsCount > 0 ? `+${decisionsCount}` : '0', color: 'text-blue-600', bg: 'bg-blue-50' },
+                { label: 'Pricing Recommendations', value: String(pricingDecisionsCount), unit: 'Suggestions', trend: pricingDecisionsCount > 0 ? `+${pricingDecisionsCount}` : '0', color: 'text-blue-600', bg: 'bg-blue-50' },
                 { label: 'Stores at Risk', value: `${storesAtRisk} / ${totalStores}`, unit: 'Stores', trend: storesAtRisk > 0 ? `-${storesAtRisk}` : '0', color: 'text-rose-600', bg: 'bg-rose-50' },
                 { label: 'Stock-Out Risk SKUs', value: String(stockOutRiskCount), unit: 'SKUs', trend: stockOutRiskCount > 0 ? `-${stockOutRiskCount}` : '0', color: 'text-amber-600', bg: 'bg-amber-50' },
                 { label: 'Replenishment Pending', value: String(replenishmentPending), unit: 'Actions', trend: replenishmentPending > 0 ? `${replenishmentPending}` : '0', color: 'text-emerald-600', bg: 'bg-emerald-50' },

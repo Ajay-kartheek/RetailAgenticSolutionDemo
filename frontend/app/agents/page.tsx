@@ -1436,7 +1436,7 @@ export default function AgentInsights() {
                 {/* Network Tab - Full Agent Network UI */}
                 {mainTab === 'network' && (
                     <div style={{ padding: '24px' }} className="flex-1 overflow-y-auto">
-                        <div className="max-w-6xl mx-auto">
+                        <div className="w-full">
                             {/* Agent Network Card */}
                             <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
                                 <div style={{ padding: '20px 32px' }} className="border-b border-gray-100 flex items-center justify-between">

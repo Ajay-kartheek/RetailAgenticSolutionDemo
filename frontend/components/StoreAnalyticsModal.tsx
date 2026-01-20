@@ -38,6 +38,8 @@ export default function StoreAnalyticsModal({ isOpen, onClose, store, inventory,
     const lowStockCount = inventory.filter(i => (i.stock_status ?? i.availability_status) === 'low_stock').length;
     // @ts-ignore
     const outOfStockCount = inventory.filter(i => (i.stock_status ?? i.availability_status) === 'out_of_stock').length;
+    // @ts-ignore
+    const inStockCount = inventory.filter(i => (i.stock_status ?? i.availability_status) === 'in_stock').length;
 
     return (
         <AnimatePresence>
@@ -102,6 +104,10 @@ export default function StoreAnalyticsModal({ isOpen, onClose, store, inventory,
                             <div style={{ padding: '12px 16px', backgroundColor: '#ffffff', borderRadius: '10px', border: '1px solid #e2e8f0', flex: 1 }}>
                                 <div style={{ fontSize: '20px', fontWeight: 700, color: '#0f172a' }}>{totalItems}</div>
                                 <div style={{ fontSize: '11px', fontWeight: 600, color: '#94a3b8', letterSpacing: '0.5px', marginTop: '2px' }}>TOTAL SKUS</div>
+                            </div>
+                            <div style={{ padding: '12px 16px', backgroundColor: '#f0fdf4', borderRadius: '10px', border: '1px solid #bbf7d0', flex: 1 }}>
+                                <div style={{ fontSize: '20px', fontWeight: 700, color: '#16a34a' }}>{inStockCount}</div>
+                                <div style={{ fontSize: '11px', fontWeight: 600, color: '#16a34a', letterSpacing: '0.5px', marginTop: '2px' }}>IN STOCK</div>
                             </div>
                             <div style={{ padding: '12px 16px', backgroundColor: '#fefce8', borderRadius: '10px', border: '1px solid #fef08a', flex: 1 }}>
                                 <div style={{ fontSize: '20px', fontWeight: 700, color: '#ca8a04' }}>{lowStockCount}</div>
