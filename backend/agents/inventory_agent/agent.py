@@ -147,10 +147,10 @@ class InventoryAgent:
                 
                 # Update results with captured data
                 if found_data["understocked"]:
-                    results["understocked_items"] = found_data["understocked"][:5]
-                    results["critical_items"] = found_data["understocked"][:3]
+                    results["understocked_items"] = found_data["understocked"][:50]
+                    results["critical_items"] = found_data["understocked"][:20]
                 if found_data["overstocked"]:
-                    results["overstocked_items"] = found_data["overstocked"][:5]
+                    results["overstocked_items"] = found_data["overstocked"][:50]
 
             # Parse Final Response
             results["insights"] = self._extract_insights_from_llm(final_response_text)

@@ -281,7 +281,7 @@ def get_all_replenishment_needs(
     understocked = search_inventory_items(
         max_stock_ratio=0.7,
         forecast_period=forecast_period,
-        limit=20
+        limit=100
     )
     items = understocked.get("items", [])
 

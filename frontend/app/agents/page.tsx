@@ -28,7 +28,8 @@ import {
 import Sidebar from '@/components/Sidebar';
 import AgentActivityPanel from '@/components/AgentActivityPanel';
 import { useAgentContext } from '@/context/AgentContext';
-import { getAgentHistory, getAgentStatus, getStores, getDemandInsights } from '@/lib/api';
+import { useDataContext } from '@/context/DataContext';
+import { getAgentHistory, getAgentStatus } from '@/lib/api';
 import type { Store, DemandInsight } from '@/lib/types';
 
 
@@ -176,29 +177,33 @@ function Pagination({ currentPage, totalItems, onPageChange }: {
 // Demand Table Component
 function DemandDataTable({ selectedStore, onStoreChange }: { selectedStore: string, onStoreChange: (storeId: string) => void }) {
     const [stores, setStores] = useState<Store[]>([]);
+    const [allInsights, setAllInsights] = useState<DemandInsight[]>([]);
     const [insights, setInsights] = useState<DemandInsight[]>([]);
     const [summary, setSummary] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
+    const { fetchStores, fetchDemandInsights } = useDataContext();
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const loadStores = async () => {
             try {
-                const storeData = await getStores();
+                const storeData = await fetchStores();
                 setStores(storeData);
             } catch (err) {
                 console.error('Failed to fetch stores:', err);
             }
         };
-        fetchStores();
-    }, []);
+        loadStores();
+    }, [fetchStores]);
 
+    // Fetch ALL insights once
     useEffect(() => {
-        const fetchInsights = async () => {
+        const loadAllInsights = async () => {
             setLoading(true);
             try {
-                const data = await getDemandInsights(selectedStore || undefined);
-                setInsights(data.insights || []);
+                // Fetch for ALL stores (undefined storeId)
+                const data = await fetchDemandInsights(undefined);
+                setAllInsights(data.insights || []);
                 setSummary(data.summary || null);
             } catch (err) {
                 console.error('Failed to fetch demand insights:', err);
@@ -206,8 +211,18 @@ function DemandDataTable({ selectedStore, onStoreChange }: { selectedStore: stri
                 setLoading(false);
             }
         };
-        fetchInsights();
-    }, [selectedStore]);
+        loadAllInsights();
+    }, [fetchDemandInsights]);
+
+    // Filter client-side when selectedStore changes
+    useEffect(() => {
+        if (!selectedStore) {
+            setInsights(allInsights);
+        } else {
+            setInsights(allInsights.filter(item => item.store_id === selectedStore));
+        }
+        setCurrentPage(0); // Reset to first page on filter change
+    }, [selectedStore, allInsights]);
 
     const getStockStatusBadge = (status: string) => {
         const styles: Record<string, string> = {
@@ -395,32 +410,35 @@ interface TrendSummary {
     days_elapsed: number;
 }
 
+// Trend Data Table Component
 function TrendDataTable({ selectedStore, onStoreChange }: { selectedStore: string, onStoreChange: (storeId: string) => void }) {
     const [stores, setStores] = useState<Store[]>([]);
+    const [allInsights, setAllInsights] = useState<TrendInsight[]>([]);
     const [insights, setInsights] = useState<TrendInsight[]>([]);
     const [summary, setSummary] = useState<TrendSummary | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
+    const { fetchStores, fetchTrendInsights } = useDataContext();
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const loadStores = async () => {
             try {
-                const data = await getStores();
-                setStores((data as any).stores || data || []);
+                const data = await fetchStores();
+                setStores(data);
             } catch (err) {
                 console.error('Error fetching stores:', err);
             }
         };
-        fetchStores();
-    }, []);
+        loadStores();
+    }, [fetchStores]);
 
+    // Fetch ALL insights once
     useEffect(() => {
-        const fetchTrendInsights = async () => {
+        const loadAllTrendInsights = async () => {
             setLoading(true);
             try {
-                const { getTrendInsights } = await import('@/lib/api');
-                const data = await getTrendInsights(selectedStore || undefined);
-                setInsights(data.insights || []);
+                const data = await fetchTrendInsights(undefined);
+                setAllInsights(data.insights || []);
                 setSummary(data.summary || null);
             } catch (err) {
                 console.error('Error fetching trend insights:', err);
@@ -428,8 +446,18 @@ function TrendDataTable({ selectedStore, onStoreChange }: { selectedStore: strin
                 setLoading(false);
             }
         };
-        fetchTrendInsights();
-    }, [selectedStore]);
+        loadAllTrendInsights();
+    }, [fetchTrendInsights]);
+
+    // Filter client-side
+    useEffect(() => {
+        if (!selectedStore) {
+            setInsights(allInsights);
+        } else {
+            setInsights(allInsights.filter(item => item.store_id === selectedStore));
+        }
+        setCurrentPage(0);
+    }, [selectedStore, allInsights]);
 
     const getTrendBadge = (status: string) => {
         const styles: Record<string, { bg: string; color: string; label: string }> = {
@@ -614,32 +642,35 @@ interface InventorySummary {
     days_remaining: number;
 }
 
+// Inventory Data Table Component
 function InventoryDataTable({ selectedStore, onStoreChange }: { selectedStore: string, onStoreChange: (storeId: string) => void }) {
     const [stores, setStores] = useState<Store[]>([]);
+    const [allInsights, setAllInsights] = useState<InventoryInsight[]>([]);
     const [insights, setInsights] = useState<InventoryInsight[]>([]);
     const [summary, setSummary] = useState<InventorySummary | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
+    const { fetchStores, fetchInventoryInsights } = useDataContext();
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const loadStores = async () => {
             try {
-                const data = await getStores();
-                setStores((data as any).stores || data || []);
+                const data = await fetchStores();
+                setStores(data);
             } catch (err) {
                 console.error('Error fetching stores:', err);
             }
         };
-        fetchStores();
-    }, []);
+        loadStores();
+    }, [fetchStores]);
 
+    // Fetch ALL insights once
     useEffect(() => {
-        const fetchInventoryInsights = async () => {
+        const loadAllInventoryInsights = async () => {
             setLoading(true);
             try {
-                const { getInventoryInsights } = await import('@/lib/api');
-                const data = await getInventoryInsights(selectedStore || undefined);
-                setInsights(data.insights || []);
+                const data = await fetchInventoryInsights(undefined);
+                setAllInsights(data.insights || []);
                 setSummary(data.summary || null);
             } catch (err) {
                 console.error('Error fetching inventory insights:', err);
@@ -647,8 +678,18 @@ function InventoryDataTable({ selectedStore, onStoreChange }: { selectedStore: s
                 setLoading(false);
             }
         };
-        fetchInventoryInsights();
-    }, [selectedStore]);
+        loadAllInventoryInsights();
+    }, [fetchInventoryInsights]);
+
+    // Filter client-side
+    useEffect(() => {
+        if (!selectedStore) {
+            setInsights(allInsights);
+        } else {
+            setInsights(allInsights.filter(item => item.store_id === selectedStore));
+        }
+        setCurrentPage(0);
+    }, [selectedStore, allInsights]);
 
     const getStatusBadge = (status: string) => {
         const styles: Record<string, { bg: string; color: string; label: string }> = {
@@ -847,32 +888,35 @@ interface ReplenishmentSummary {
     period: string;
 }
 
+// Replenishment Data Table Component
 function ReplenishmentDataTable({ selectedStore, onStoreChange }: { selectedStore: string, onStoreChange: (storeId: string) => void }) {
     const [stores, setStores] = useState<Store[]>([]);
+    const [allInsights, setAllInsights] = useState<ReplenishmentInsight[]>([]);
     const [insights, setInsights] = useState<ReplenishmentInsight[]>([]);
     const [summary, setSummary] = useState<ReplenishmentSummary | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
+    const { fetchStores, fetchReplenishmentInsights } = useDataContext();
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const loadStores = async () => {
             try {
-                const data = await getStores();
-                setStores((data as any).stores || data || []);
+                const data = await fetchStores();
+                setStores(data);
             } catch (err) {
                 console.error('Error fetching stores:', err);
             }
         };
-        fetchStores();
-    }, []);
+        loadStores();
+    }, [fetchStores]);
 
+    // Fetch ALL insights once
     useEffect(() => {
-        const fetchReplenishmentInsights = async () => {
+        const loadAllReplenishmentInsights = async () => {
             setLoading(true);
             try {
-                const { getReplenishmentInsights } = await import('@/lib/api');
-                const data = await getReplenishmentInsights(selectedStore || undefined);
-                setInsights(data.insights || []);
+                const data = await fetchReplenishmentInsights(undefined);
+                setAllInsights(data.insights || []);
                 setSummary(data.summary || null);
             } catch (err) {
                 console.error('Error fetching replenishment insights:', err);
@@ -880,8 +924,18 @@ function ReplenishmentDataTable({ selectedStore, onStoreChange }: { selectedStor
                 setLoading(false);
             }
         };
-        fetchReplenishmentInsights();
-    }, [selectedStore]);
+        loadAllReplenishmentInsights();
+    }, [fetchReplenishmentInsights]);
+
+    // Filter client-side
+    useEffect(() => {
+        if (!selectedStore) {
+            setInsights(allInsights);
+        } else {
+            setInsights(allInsights.filter(item => item.target_store_id === selectedStore));
+        }
+        setCurrentPage(0);
+    }, [selectedStore, allInsights]);
 
     const getUrgencyBadge = (urgency: string) => {
         const styles: Record<string, { bg: string; color: string; label: string }> = {
@@ -1071,32 +1125,35 @@ interface PricingSummary {
     period: string;
 }
 
+// Pricing Data Table Component
 function PricingDataTable({ selectedStore, onStoreChange }: { selectedStore: string, onStoreChange: (storeId: string) => void }) {
     const [stores, setStores] = useState<Store[]>([]);
-    const [insights, setInsights] = useState<PricingInsight[]>([]);
+    const [allInsights, setAllInsights] = useState<any[]>([]);
+    const [insights, setInsights] = useState<any[]>([]);
     const [summary, setSummary] = useState<PricingSummary | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(0);
+    const { fetchStores, fetchPricingInsights } = useDataContext();
 
     useEffect(() => {
-        const fetchStores = async () => {
+        const loadStores = async () => {
             try {
-                const data = await getStores();
-                setStores((data as any).stores || data || []);
+                const data = await fetchStores();
+                setStores(data);
             } catch (err) {
                 console.error('Error fetching stores:', err);
             }
         };
-        fetchStores();
-    }, []);
+        loadStores();
+    }, [fetchStores]);
 
+    // Fetch ALL insights once
     useEffect(() => {
-        const fetchPricingInsights = async () => {
+        const loadAllPricingInsights = async () => {
             setLoading(true);
             try {
-                const { getPricingInsights } = await import('@/lib/api');
-                const data = await getPricingInsights(selectedStore || undefined);
-                setInsights(data.insights || []);
+                const data = await fetchPricingInsights(undefined);
+                setAllInsights(data.insights || []);
                 setSummary(data.summary || null);
             } catch (err) {
                 console.error('Error fetching pricing insights:', err);
@@ -1104,8 +1161,18 @@ function PricingDataTable({ selectedStore, onStoreChange }: { selectedStore: str
                 setLoading(false);
             }
         };
-        fetchPricingInsights();
-    }, [selectedStore]);
+        loadAllPricingInsights();
+    }, [fetchPricingInsights]);
+
+    // Filter client-side
+    useEffect(() => {
+        if (!selectedStore) {
+            setInsights(allInsights);
+        } else {
+            setInsights(allInsights.filter(item => item.store_id === selectedStore));
+        }
+        setCurrentPage(0);
+    }, [selectedStore, allInsights]);
 
     const getRecommendationTypeBadge = (type: string) => {
         const styles: Record<string, { bg: string; color: string; label: string }> = {

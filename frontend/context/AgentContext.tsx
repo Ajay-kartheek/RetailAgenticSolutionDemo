@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
 import { runOrchestrator, createSSEConnection } from '@/lib/api';
 import type { SSEEvent, AgentStatus } from '@/lib/types';
+import { useDataContext } from './DataContext';
 
 interface AgentState {
     id: string;
@@ -30,9 +31,12 @@ interface AgentContextType {
     updateAgentStatus: (agentId: string, status: AgentStatus, message?: string) => void;
 }
 
+
+
 const AgentContext = createContext<AgentContextType | undefined>(undefined);
 
 export const AgentProvider = ({ children }: { children: ReactNode }) => {
+    // ... (state declarations)
     const [isRunning, setIsRunning] = useState(false);
     const [isExecuting, setIsExecuting] = useState(false);
     const [agentStatuses, setAgentStatuses] = useState<Record<string, AgentState>>({
@@ -48,7 +52,22 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
     const [activityMessages, setActivityMessages] = useState<ActivityMessage[]>([]);
     const [abortController, setAbortController] = useState<(() => void) | null>(null);
 
+    // Get DataContext functions for pre-fetching
+    const {
+        fetchDemandInsights,
+        fetchTrendInsights,
+        fetchInventoryInsights,
+        fetchReplenishmentInsights,
+        fetchPricingInsights,
+        fetchTrends,
+        fetchCampaignSuggestions,
+        refreshDecisions,
+        refreshStores,
+        fetchInventorySummary
+    } = useDataContext();
+
     const addMessage = useCallback((agentId: string, message: string, type: ActivityMessage['type'] = 'info') => {
+        // ... (existing implementation)
         setActivityMessages(prev => [
             {
                 id: Math.random().toString(36).substring(7),
@@ -58,10 +77,11 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
                 type
             },
             ...prev
-        ].slice(0, 50)); // Keep last 50 messages
+        ].slice(0, 50));
     }, []);
 
     const updateAgentStatus = useCallback((agentId: string, status: AgentStatus, message?: string) => {
+        // ... (existing implementation)
         setAgentStatuses(prev => ({
             ...prev,
             [agentId]: {
@@ -82,12 +102,33 @@ export const AgentProvider = ({ children }: { children: ReactNode }) => {
             setIsRunning(false);
             addMessage('System', 'Analysis completed successfully', 'success');
             updateAgentStatus('orchestrator', 'completed', 'Orchestration complete');
+
+            // PRE-FETCH ALL DATA IN BACKGROUND
+            console.log('Analysis complete. Pre-fetching all insights...');
+            Promise.all([
+                fetchDemandInsights(undefined),
+                fetchTrendInsights(undefined),
+                fetchInventoryInsights(undefined),
+                fetchReplenishmentInsights(undefined),
+                fetchPricingInsights(undefined),
+                fetchTrends(),
+                fetchCampaignSuggestions(),
+                refreshDecisions(),
+                refreshStores(),
+                fetchInventorySummary()
+            ]).then(() => {
+                console.log('All insights pre-fetched and cached.');
+            }).catch(err => {
+                console.error('Error pre-fetching insights:', err);
+            });
+
             return;
         }
 
         // Handle errors
         if (type === 'error') {
             setIsRunning(false);
+            // ... (existing error handling)
             const errorMessage = event.error || 'Unknown error occurred';
             addMessage('System', `Analysis failed: ${errorMessage}`, 'error');
             updateAgentStatus('orchestrator', 'error', errorMessage);

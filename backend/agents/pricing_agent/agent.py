@@ -83,7 +83,7 @@ class PricingAgent:
         recommendations = [
             rec for rec in all_recommendations 
             if rec.get("product_id") not in products_with_active_changes
-        ][:10]  # Limit to 10 for demo
+        ][:50]  # Increased limit from 10 to 50
         
         skipped_count = len(all_recommendations) - len([r for r in all_recommendations if r.get("product_id") not in products_with_active_changes])
         if skipped_count > 0:

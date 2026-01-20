@@ -11,7 +11,8 @@ import {
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import { useAgentContext } from '@/context/AgentContext';
-import { getStores, getInventoryStatusSummary, getStoreInventory, getStoreForecasts, getProducts, getDecisions } from '@/lib/api';
+import { useDataContext } from '@/context/DataContext';
+import { getStoreInventory, getStoreForecasts } from '@/lib/api';
 import { Store } from '@/lib/types';
 import StoreAnalyticsModal from '@/components/StoreAnalyticsModal';
 
@@ -38,17 +39,60 @@ const statusColors = {
 };
 
 export default function Dashboard() {
-  const [stores, setStores] = useState<any[]>([]);
-  const [products, setProducts] = useState<Record<string, string>>({}); // Map: ID -> Name
+
+
+  // Use global contexts
+  const { agentStatuses } = useAgentContext();
+  const {
+    stores: cachedStores,
+    decisions: cachedDecisions,
+    inventorySummary: cachedSummary,
+    fetchStores,
+    fetchProducts,
+    fetchDecisions,
+    fetchInventorySummary,
+    fetchInventoryInsights
+  } = useDataContext() as any;
+
+  // Derived state for sidebar
+  const activeCount = Object.values(agentStatuses).filter(s => s.status === 'running').length;
+
+  // Initialize state from cache if available
+  const [stores, setStores] = useState<any[]>(cachedStores || []);
+  const [products, setProducts] = useState<Record<string, string>>({});
   const [selectedStore, setSelectedStore] = useState<any>(null);
   const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
-  const [fullInventory, setFullInventory] = useState<any[]>([]);
-  const [decisionsCount, setDecisionsCount] = useState<number>(0);
-  const [pricingDecisionsCount, setPricingDecisionsCount] = useState<number>(0);
-  const [storesAtRisk, setStoresAtRisk] = useState<number>(0);
-  const [totalStores, setTotalStores] = useState<number>(0);
-  const [stockOutRiskCount, setStockOutRiskCount] = useState<number>(0);
-  const [replenishmentPending, setReplenishmentPending] = useState<number>(0);
+  const [fullInventory, setFullInventory] = useState<any[]>([]); // We don't cache this globally as a list yet
+
+  // Initialize KPIs from cache
+  const [decisionsCount, setDecisionsCount] = useState<number>(cachedDecisions?.length || 0);
+  const [pricingDecisionsCount, setPricingDecisionsCount] = useState<number>(() => {
+    return cachedDecisions?.filter((d: any) => d.decision_type?.includes('pricing')).length || 0;
+  });
+
+  // Calculate initial risk metrics from cached summary
+  const [storesAtRisk, setStoresAtRisk] = useState<number>(() => {
+    if (!cachedSummary?.by_store) return 0;
+    return Object.entries(cachedSummary.by_store || {}).filter(
+      ([_, counts]: [string, any]) => (counts.understocked || 0) > 0
+    ).length;
+  });
+
+  const [totalStores, setTotalStores] = useState<number>(cachedStores?.length || 0);
+
+  const [stockOutRiskCount, setStockOutRiskCount] = useState<number>(() => {
+    if (!cachedSummary?.by_store) return 0;
+    return Object.values(cachedSummary.by_store || {}).reduce(
+      (sum: number, counts: any) => sum + (counts.understocked || 0), 0
+    ) as number;
+  });
+
+  const [replenishmentPending, setReplenishmentPending] = useState<number>(() => {
+    return cachedDecisions?.filter(
+      (d: any) => (d.status === 'pending' || d.status === 'pending_approval') && d.decision_type?.includes('replenishment')
+    ).length || 0;
+  });
+
   const [storeDetails, setStoreDetails] = useState<{
     loading: boolean;
     stockHealth: { critical: number, low: number, good: number };
@@ -61,25 +105,28 @@ export default function Dashboard() {
     topDemand: []
   });
 
-  // Use global context (for active agents count in sidebar)
-  const { agentStatuses } = useAgentContext();
 
-  // Derived state for sidebar
-  const activeCount = Object.values(agentStatuses).filter(s => s.status === 'running').length;
-
-  // Load initial store data and products
+  // Load initial store data and products (now uses cached data)
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [storesData, statusSummary, productsList, allDecisionsData] = await Promise.all([
-          getStores(),
-          getInventoryStatusSummary(),
-          getProducts(),
-          getDecisions()
+        const [storesData, statusSummary, productsList, allDecisionsData, inventoryInsightsData] = await Promise.all([
+          fetchStores(),
+          fetchInventorySummary(),
+          fetchProducts(),
+          fetchDecisions(),
+          fetchInventoryInsights(undefined) // Fetch all inventory insights for modal
         ]);
+
+        // Set full inventory for modal filtering
+        setFullInventory(inventoryInsightsData?.insights || []);
+
+        setStores(storesData); // Update stores with fresh data
 
         // Set total decisions count (both pricing and replenishment)
         setDecisionsCount(allDecisionsData?.length || 0);
+
+        // ... rest of the logic updates state with fresh data ...
 
         // Calculate Pricing Decisions count
         const pricingCount = allDecisionsData?.filter(
@@ -109,11 +156,11 @@ export default function Dashboard() {
 
         // Create product map
         const prodMap: Record<string, string> = {};
-        productsList.forEach(p => prodMap[p.product_id] = p.name || p.product_name || p.product_id);
+        productsList.forEach((p: any) => prodMap[p.product_id] = p.name || p.product_name || p.product_id);
         setProducts(prodMap);
 
         // Map backend stores to UI format
-        const mappedStores = storesData.map(s => {
+        const mappedStores = storesData.map((s: any) => {
           const coords = STORE_COORDINATES[s.store_id] || { x: 50, y: 50 };
           const statusCounts = statusSummary.by_store[s.store_id] || {};
 

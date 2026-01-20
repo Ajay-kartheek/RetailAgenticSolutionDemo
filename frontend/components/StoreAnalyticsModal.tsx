@@ -20,6 +20,9 @@ export default function StoreAnalyticsModal({ isOpen, onClose, store, inventory,
 
     // Filter logic
     const filteredInventory = inventory.filter(item => {
+        // Filter by store first
+        if (store && item.store_id !== store.id) return false;
+
         const productName = products[item.product_id] || item.product_id;
         const matchesSearch = productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.product_id.toLowerCase().includes(searchTerm.toLowerCase());

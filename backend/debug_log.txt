@@ -366,3 +366,66 @@
 2026-01-19 22:50:32.593161: Stored 200 insights for inventory
 2026-01-19 22:51:02.601235: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
 2026-01-19 22:51:17.329892: Stored 20 insights for pricing
+2026-01-20 09:50:07.022868: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-20 09:50:07.075341: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-20 09:50:32.804883: Raw LLM Response length: 4929
+2026-01-20 09:50:32.804883: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 20,251 units across all stores with 85% average confidence. Erode shows highest demand (4,112 units), followed by Vellore (3,361 
+2026-01-20 15:20:34.324311: Stored demand_agent for run RUN_20260120151639_1AB679
+2026-01-20 15:20:34.550111: Stored trend_agent for run RUN_20260120151639_1AB679
+2026-01-20 15:20:34.769649: Stored inventory_agent for run RUN_20260120151639_1AB679
+2026-01-20 15:20:34.990166: Stored replenishment_agent for run RUN_20260120151639_1AB679
+2026-01-20 15:20:35.327053: Stored pricing_agent for run RUN_20260120151639_1AB679
+2026-01-20 15:20:42.443914: Stored 200 insights for demand
+2026-01-20 15:20:47.282640: Stored 200 insights for trend
+2026-01-20 15:20:51.868430: Stored 200 insights for inventory
+2026-01-20 15:21:22.317401: Stored 20 insights for replenishment
+2026-01-20 15:21:41.755434: Stored 20 insights for pricing
+2026-01-20 10:28:42.925351: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-20 10:28:42.925351: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-20 10:29:17.931030: Raw LLM Response length: 5225
+2026-01-20 10:29:17.931030: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 20,026 units across all stores with 84% average forecast confidence. ERD shows highest demand (4,183 units), while TCH has highes
+2026-01-20 15:59:19.177741: Stored demand_agent for run RUN_20260120155412_9D2DFE
+2026-01-20 15:59:19.402334: Stored trend_agent for run RUN_20260120155412_9D2DFE
+2026-01-20 15:59:19.624380: Stored inventory_agent for run RUN_20260120155412_9D2DFE
+2026-01-20 15:59:19.847905: Stored replenishment_agent for run RUN_20260120155412_9D2DFE
+2026-01-20 15:59:20.068589: Stored pricing_agent for run RUN_20260120155412_9D2DFE
+2026-01-20 15:59:26.349799: Stored 200 insights for demand
+2026-01-20 15:59:30.983561: Stored 200 insights for trend
+2026-01-20 15:59:35.634076: Stored 200 insights for inventory
+2026-01-20 16:00:07.667699: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-20 16:00:39.702137: Error storing detailed insights for pricing: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-20 17:25:12.773552: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-20 17:25:12.773552: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-20 17:25:34.339096: Raw LLM Response length: 3876
+2026-01-20 17:25:34.339096: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 20,026 units across all stores with 84% average confidence. Strong performance in Vellore and Erode, with lower confidence in Tir
+2026-01-20 22:55:35.791685: Stored demand_agent for run RUN_20260120224836_78DAEA
+2026-01-20 22:55:36.079570: Stored trend_agent for run RUN_20260120224836_78DAEA
+2026-01-20 22:55:36.363648: Stored inventory_agent for run RUN_20260120224836_78DAEA
+2026-01-20 22:55:36.653423: Stored pricing_agent for run RUN_20260120224836_78DAEA
+2026-01-20 22:55:43.682166: Stored 200 insights for demand
+2026-01-20 22:55:48.955857: Stored 200 insights for trend
+2026-01-20 22:55:53.901120: Stored 200 insights for inventory
+2026-01-20 22:56:25.908794: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-20 22:56:57.942924: Error storing detailed insights for pricing: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-20 17:44:20.373331: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-20 17:44:20.373331: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-20 17:44:49.141144: Raw LLM Response length: 4998
+2026-01-20 17:44:49.141144: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Total forecasted demand of 20,026 units across 10 stores with 84% average confidence. Highest demand in STORE_ERD (4,183 units) and strongest confidence in 
+2026-01-20 23:14:50.728290: Stored demand_agent for run RUN_20260120230843_D5B216
+2026-01-20 23:14:51.011625: Stored trend_agent for run RUN_20260120230843_D5B216
+2026-01-20 23:14:51.299931: Stored inventory_agent for run RUN_20260120230843_D5B216
+2026-01-20 23:14:51.590894: Stored replenishment_agent for run RUN_20260120230843_D5B216
+2026-01-20 23:14:51.878013: Stored pricing_agent for run RUN_20260120230843_D5B216
+2026-01-20 23:14:58.916394: Stored 200 insights for demand
+2026-01-20 23:15:04.488030: Stored 200 insights for trend
+2026-01-20 23:15:09.678279: Stored 200 insights for inventory
+2026-01-20 23:15:41.694004: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-20 23:16:13.740833: Error storing detailed insights for pricing: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)

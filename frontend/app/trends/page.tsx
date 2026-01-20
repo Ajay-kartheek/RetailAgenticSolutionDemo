@@ -16,8 +16,9 @@ import {
     Zap
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
-import { getTrends, getCampaignSuggestions, generateCampaignImage, getProducts } from '@/lib/api';
+import { generateCampaignImage } from '@/lib/api';
 import { useAgentContext } from '@/context/AgentContext';
+import { useDataContext } from '@/context/DataContext';
 import { Product } from '@/lib/types';
 
 // --- Types ---
@@ -784,10 +785,7 @@ function CreateCampaignModal({
 export default function TrendsPage() {
     const { startAnalysis } = useAgentContext();
     const [activeTab, setActiveTab] = useState<'trends' | 'campaigns'>('trends');
-    const [trends, setTrends] = useState<Trend[]>([]);
-    const [campaignSuggestions, setCampaignSuggestions] = useState<CampaignSuggestion[]>([]);
-    const [products, setProducts] = useState<Product[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContext, setModalContext] = useState<{
         campaignType?: string,
@@ -795,14 +793,40 @@ export default function TrendsPage() {
         title?: string
     } | undefined>(undefined);
 
+    const {
+        trends: cachedTrends,
+        campaignSuggestions: cachedCampaigns,
+        products: cachedProducts,
+        fetchTrends,
+        fetchCampaignSuggestions,
+        fetchProducts
+    } = useDataContext() as any;
+
+    const [trends, setTrends] = useState<Trend[]>(cachedTrends || []);
+    const [campaignSuggestions, setCampaignSuggestions] = useState<CampaignSuggestion[]>(cachedCampaigns || []);
+    const [products, setProducts] = useState<Product[]>(cachedProducts || []);
+
+    // Only show loading if we don't have cached data for the main views
+    const hasCache = cachedTrends?.length > 0 || cachedCampaigns?.length > 0;
+    const [isLoading, setIsLoading] = useState(!hasCache);
+
     useEffect(() => {
+        // If we have cache, ensuring loading is false immediately
+        if (hasCache) {
+            setIsLoading(false);
+            setTrends(cachedTrends || []);
+            setCampaignSuggestions(cachedCampaigns || []);
+            setProducts(cachedProducts || []);
+        }
+
         const loadData = async () => {
-            setIsLoading(true);
+            // Only set loading true if we really have no data
+            if (!hasCache) setIsLoading(true);
             try {
                 const [trendsData, campaignsData, productsData] = await Promise.all([
-                    getTrends(),
-                    getCampaignSuggestions(),
-                    getProducts()
+                    fetchTrends(),
+                    fetchCampaignSuggestions(),
+                    fetchProducts()
                 ]);
                 setTrends(trendsData || []);
                 setCampaignSuggestions(campaignsData || []);
@@ -815,7 +839,7 @@ export default function TrendsPage() {
         };
 
         loadData();
-    }, []);
+    }, [fetchTrends, fetchCampaignSuggestions, fetchProducts, hasCache, cachedTrends, cachedCampaigns, cachedProducts]);
 
     return (
         <div className="flex h-screen w-full bg-gray-100 font-sans overflow-hidden">

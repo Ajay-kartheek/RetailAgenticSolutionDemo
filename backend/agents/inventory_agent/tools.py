@@ -175,11 +175,14 @@ def analyze_inventory_status(
     }
 
 
+
+
+
 def search_inventory_items(
     min_stock_ratio: float | None = None,
     max_stock_ratio: float | None = None,
     forecast_period: str = "2026-Q1",
-    limit: int = 10,
+    limit: int = 50,
 ) -> dict[str, Any]:
     """
     Search for inventory items based on stock-to-demand ratio.
@@ -227,8 +230,20 @@ def search_inventory_items(
     
     # Filter forecasts for period
     period_forecasts = [f for f in all_forecasts if f.get("forecast_period") == forecast_period]
-    if len(period_forecasts) > limit * 5:
-        period_forecasts = period_forecasts[:limit * 5]  # Cap input to avoid processing too much
+
+    # Calculate Trend Constraints (Dynamic Trend Calculation)
+    today = date.today()
+    if forecast_period == "2026-Q1":
+        period_start = date(2026, 1, 1)
+        period_end = date(2026, 3, 31)
+    else:
+        period_start = date(2026, 1, 1) # Default fallback
+        period_end = date(2026, 3, 31)
+        
+    total_days = (period_end - period_start).days + 1
+    days_elapsed = max(1, (today - period_start).days + 1)
+
+    # REMOVED arbitrary slicing of input to ensure we check everything
     
     matched_items = []
 
@@ -262,6 +277,20 @@ def search_inventory_items(
         if ratio < 0.5: status = "understocked"
         elif ratio > 1.5: status = "overstocked"
 
+        # Calculate Trend Status
+        expected_sales = (forecasted_demand / total_days) * days_elapsed if total_days > 0 else 0
+        velocity_ratio = round(actual_sales / expected_sales, 2) if expected_sales > 0 else 0
+        
+        trend_status = "average"
+        if velocity_ratio > 1.5:
+            trend_status = "in-trend"
+        elif velocity_ratio >= 0.8:
+            trend_status = "average"
+        elif velocity_ratio >= 0.5:
+            trend_status = "slow-moving"
+        else:
+            trend_status = "no-trend"
+
         item = {
             "store_id": store_id,
             "product_id": product_id,
@@ -271,17 +300,21 @@ def search_inventory_items(
             "actual_sales": actual_sales,
             "remaining_demand": remaining_demand,
             "safety_stock": inv_details.get("safety_stock", 100),
+
             "stock_to_demand_ratio": ratio,
-            "calculated_status": status
+            "calculated_status": status,
+            "trend_status": trend_status,
+            "velocity_ratio": velocity_ratio
         }
         matched_items.append(item)
         
-        if len(matched_items) >= limit:
-            break
-
     # Sort: Ascending for low stock (urgent first), Descending for high stock (worst first)
     is_finding_low = max_stock_ratio is not None and max_stock_ratio < 1.0
     matched_items.sort(key=lambda x: x.get("stock_to_demand_ratio", 0), reverse=not is_finding_low)
+
+    # Apply limit AFTER sorting
+    if limit > 0:
+        matched_items = matched_items[:limit]
 
     return {
         "found_count": len(matched_items),
@@ -304,7 +337,7 @@ INVENTORY_TOOLS = [
                     "min_stock_ratio": {"type": "number", "description": "Min stock/demand ratio"},
                     "max_stock_ratio": {"type": "number", "description": "Max stock/demand ratio"},
                     "forecast_period": {"type": "string", "default": "2026-Q1"},
-                    "limit": {"type": "integer", "default": 10},
+                    "limit": {"type": "integer", "default": 50},
                 },
                 "required": [],
             }

@@ -17,32 +17,39 @@ import {
   ShoppingBag
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
-import { getDecisions, approveDecision, rejectDecision } from '@/lib/api';
+import { approveDecision, rejectDecision } from '@/lib/api';
 import { useAgentContext } from '@/context/AgentContext';
+import { useDataContext } from '@/context/DataContext';
 import type { Decision } from '@/lib/types';
 
 export default function DecisionsPage() {
   const [activeTab, setActiveTab] = useState('Pending');
-  const [decisions, setDecisions] = useState<Decision[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { decisions: cachedDecisions, fetchDecisions: fetchCachedDecisions, refreshDecisions, triggerExecution } = useDataContext() as any; // Cast as any if triggerExecution missing in type
+
+  // Initialize with cached data for instant load
+  const [decisions, setDecisions] = useState<Decision[]>(cachedDecisions || []);
+  const [loading, setLoading] = useState(!cachedDecisions || cachedDecisions.length === 0);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const { triggerExecution } = useAgentContext();
 
-  useEffect(() => {
-    fetchDecisions();
-  }, []);
-
-  const fetchDecisions = async () => {
-    setLoading(true);
+  const loadDecisions = async () => {
     try {
-      const data = await getDecisions();
+      const data = await fetchCachedDecisions();
       setDecisions(data);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch decisions:', error);
-    } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // If we have cached data, ensure loading is false
+    if (cachedDecisions && cachedDecisions.length > 0) {
+      setLoading(false);
+      setDecisions(cachedDecisions);
+    }
+    loadDecisions();
+  }, [fetchCachedDecisions, cachedDecisions]);
 
   const handleApprove = async (id: string) => {
     setProcessingId(id);
@@ -68,7 +75,7 @@ export default function DecisionsPage() {
       // If the decision was already approved/executed, just refresh the list
       if (error?.response?.status === 400) {
         console.log('Decision already processed, refreshing list...');
-        fetchDecisions();
+        loadDecisions();
       } else {
         console.error('Failed to approve decision:', error);
       }

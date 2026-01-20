@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowLeft, TrendingUp, Package, AlertTriangle, ChevronDown, Loader2, BarChart3 } from 'lucide-react';
-import { getStores, getDemandInsights } from '@/lib/api';
+import { useDataContext } from '@/context/DataContext';
 import type { Store, DemandInsight } from '@/lib/types';
 
 export default function DemandAgentPage() {
@@ -15,26 +15,28 @@ export default function DemandAgentPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch stores on mount
+  const { fetchStores, fetchDemandInsights } = useDataContext();
+
+  // Fetch stores on mount (cached)
   useEffect(() => {
-    const fetchStores = async () => {
+    const loadStores = async () => {
       try {
-        const storeData = await getStores();
+        const storeData = await fetchStores();
         setStores(storeData);
       } catch (err) {
         console.error('Failed to fetch stores:', err);
       }
     };
-    fetchStores();
-  }, []);
+    loadStores();
+  }, [fetchStores]);
 
-  // Fetch insights when store selection changes
+  // Fetch insights when store selection changes (cached by storeId)
   useEffect(() => {
-    const fetchInsights = async () => {
+    const loadInsights = async () => {
       setLoading(true);
       setError(null);
       try {
-        const data = await getDemandInsights(selectedStore || undefined);
+        const data = await fetchDemandInsights(selectedStore || undefined);
         setInsights(data.insights || []);
         setSummary(data.summary || null);
       } catch (err) {
@@ -44,8 +46,8 @@ export default function DemandAgentPage() {
         setLoading(false);
       }
     };
-    fetchInsights();
-  }, [selectedStore]);
+    loadInsights();
+  }, [selectedStore, fetchDemandInsights]);
 
   const getStockStatusBadge = (status: string) => {
     const styles: Record<string, string> = {

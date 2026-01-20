@@ -117,7 +117,7 @@ class ReplenishmentAgent:
         plans = [
             plan for plan in all_plans 
             if f"{plan.get('product_id')}_{plan.get('target_store_id')}" not in products_with_active_transfers
-        ][:10]  # Limit to 10 plans for demo
+        ][:50]  # Limit to 50 plans for demo
         
         skipped_count = len(all_plans) - len([p for p in all_plans if f"{p.get('product_id')}_{p.get('target_store_id')}" not in products_with_active_transfers])
         if skipped_count > 0:

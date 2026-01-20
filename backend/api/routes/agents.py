@@ -622,8 +622,17 @@ async def get_pricing_insights(store_id: str = None, period: str = "2026-Q1"):
             "trending_products": []
         }
         
-        # Analyze trends for each product-store combination
-        for forecast in period_forecasts[:20]:  # Limit for performance
+        # Build inventory map first
+        inventory_items = db.scan(settings.inventory_table)
+        inventory_map = {f"{i.get('store_id')}#{i.get('product_id')}": i.get("quantity", 0) for i in inventory_items}
+        
+        inventory_data = {
+            "overstocked_items": [],
+            "understocked_items": []
+        }
+
+        # Analyze trends AND inventory for each product-store combination
+        for forecast in period_forecasts:  # Removed limit for accuracy
             store = forecast.get("store_id")
             product_id = forecast.get("product_id")
             forecasted = forecast.get("forecasted_demand", 0)
@@ -653,13 +662,32 @@ async def get_pricing_insights(store_id: str = None, period: str = "2026-Q1"):
                     "product_id": product_id,
                     "trend_status": trend_status
                 })
+                
+            # Calculate Stock Status (Fix for missing inventory data)
+            current_inv = inventory_map.get(f"{store}#{product_id}", 0)
+            remaining_demand = max(0, forecasted - actual) # Simple remaining demand approximation
+            if remaining_demand > 0:
+                stock_ratio = current_inv / remaining_demand
+            else:
+                stock_ratio = 999.0
+            
+            # Map trend_status for use in pricing tools
+            item_data = {
+                "store_id": store,
+                "product_id": product_id,
+                "product_name": products_map.get(product_id, {}).get("product_name", product_id),
+                "current_stock": current_inv,
+                "trend_status": trend_status, # Critical: pass trend status
+                "stock_to_demand_ratio": stock_ratio
+            }
+            
+            if stock_ratio < 0.3: # Understocked threshold
+                inventory_data["understocked_items"].append(item_data)
+            elif stock_ratio > 1.3: # Overstocked threshold
+                inventory_data["overstocked_items"].append(item_data)
         
         # Get inventory data for stock status
-        inventory = db.scan(settings.inventory_table)
-        inventory_data = {
-            "overstocked_items": [],
-            "understocked_items": []
-        }
+
         
         # Get pricing recommendations
         pricing_data = get_all_pricing_recommendations(

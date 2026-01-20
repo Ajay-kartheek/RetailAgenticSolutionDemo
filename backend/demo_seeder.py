@@ -420,7 +420,7 @@ SCENARIO_4 = {
     ],
     "forecasts": [
         # Chennai - High forecasts (understocking expected)
-        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "forecasted_demand": 850, "confidence": 0.94},
+        {"store_id": "STORE_CHN", "product_id": "PROD_WS001", "forecasted_demand": 1500, "confidence": 0.94},
         {"store_id": "STORE_CHN", "product_id": "PROD_LJ002", "forecasted_demand": 920, "confidence": 0.92},
         {"store_id": "STORE_CHN", "product_id": "PROD_DJ004", "forecasted_demand": 1100, "confidence": 0.95},
         {"store_id": "STORE_CHN", "product_id": "PROD_BZ016", "forecasted_demand": 780, "confidence": 0.88},
@@ -539,28 +539,34 @@ def seed_transfer_routes(stores):
     """Generate transfer routes between major hubs."""
     print("\n🚚 Seeding transfer routes...")
     
-    # Define hub stores
-    hubs = ["STORE_CHN", "STORE_BLR", "STORE_HYD", "STORE_KCH", "STORE_VZG"]
+    # Create a full mesh for the demo stores (since we use a small subset)
+    # This ensures any store can transfer to any other store for the demo scenarios
+    active_stores = [s["store_id"] for s in stores]
     
     routes = []
-    for hub in hubs:
-        for store in stores:
-            if store["store_id"] != hub and store["store_id"] in [s["store_id"] for s in stores]:
-                # Add route from hub to store
-                routes.append({
-                    "route_id": f"{hub}#{store['store_id']}",
-                    "from_store_id": hub,
-                    "to_store_id": store["store_id"],
-                    "transit_days": 1 if store["store_id"] in hubs else 2,
-                    "cost_per_unit": 15 if store["store_id"] in hubs else 25,
-                    "is_active": True,
-                })
+    for source in active_stores:
+        for target in active_stores:
+            if source == target:
+                continue
+                
+            # Add route
+            routes.append({
+                "route_id": f"{source}#{target}",
+                "from_store_id": source,
+                "to_store_id": target,
+                "transit_days": 1, # Simplified for demo
+                "cost_per_unit": 15,
+                "is_active": True,
+            })
     
-    # Add routes for first 50 to avoid too many
-    for route in routes[:50]:
-        put_item(settings.store_transfers_table, route)
+    # Batch write all routes
+    table = dynamodb.Table(settings.store_transfers_table)
+    with table.batch_writer() as batch:
+        for route in routes:
+            # Convert float to Decimal if needed (though we use ints here)
+            batch.put_item(Item=route)
     
-    print(f"  ✓ Added {min(len(routes), 50)} routes")
+    print(f"  ✓ Added {len(routes)} routes (full mesh)")
 
 def seed_inventory(scenario: dict, stores):
     """Seed inventory for ALL stores."""

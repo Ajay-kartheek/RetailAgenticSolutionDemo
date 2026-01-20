@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '@/styles/globals.css';
 
 import { AgentProvider } from '@/context/AgentContext';
+import { DataProvider } from '@/context/DataContext';
 
 export const metadata: Metadata = {
   title: 'SK Brands Retail AI',
@@ -24,9 +25,11 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans antialiased">
-        <AgentProvider>
-          {children}
-        </AgentProvider>
+        <DataProvider>
+          <AgentProvider>
+            {children}
+          </AgentProvider>
+        </DataProvider>
       </body>
     </html>
   );
