@@ -9,7 +9,6 @@ import {
   Brain,
   ClipboardCheck,
   TrendingUp,
-  Settings,
   ChevronLeft,
   ChevronRight,
   Zap,
@@ -25,8 +24,7 @@ const navItems: NavItem[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Agent Network', href: '/agents', icon: Brain },
   { name: 'Decisions', href: '/decisions', icon: ClipboardCheck },
-  { name: 'Trends & Campaigns', href: '/trends', icon: TrendingUp },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Campaigns & Trends', href: '/trends', icon: TrendingUp },
 ];
 
 interface SidebarProps {

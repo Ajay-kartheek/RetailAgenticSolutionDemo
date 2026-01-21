@@ -784,7 +784,7 @@ function CreateCampaignModal({
 
 export default function TrendsPage() {
     const { startAnalysis } = useAgentContext();
-    const [activeTab, setActiveTab] = useState<'trends' | 'campaigns'>('trends');
+    const [activeTab, setActiveTab] = useState<'trends' | 'campaigns'>('campaigns');
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContext, setModalContext] = useState<{
@@ -858,8 +858,8 @@ export default function TrendsPage() {
                     {/* Tabs */}
                     <div style={{ display: 'flex', gap: '4px', padding: '4px', borderRadius: '10px', backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}>
                         {[
-                            { key: 'trends', label: 'Market Trends', icon: TrendingUp },
-                            { key: 'campaigns', label: 'Campaigns', icon: Megaphone }
+                            { key: 'campaigns', label: 'Campaigns', icon: Megaphone },
+                            { key: 'trends', label: 'Market Trends', icon: TrendingUp }
                         ].map((tab) => (
                             <button
                                 key={tab.key}
