@@ -429,3 +429,19 @@
 2026-01-20 23:15:09.678279: Stored 200 insights for inventory
 2026-01-20 23:15:41.694004: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
 2026-01-20 23:16:13.740833: Error storing detailed insights for pricing: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-21 07:42:38.347986: Generating structured summaries. Keys in results: ['run_id', 'orchestrator_id', 'started_at', 'forecast_period', 'agents_executed', 'agent_results', 'tool_calls', 'status', 'executive_summary', 'completed_at']
+2026-01-21 07:42:38.348179: Agent results keys: ['demand_agent', 'trend_agent', 'inventory_agent', 'replenishment_agent', 'pricing_agent']
+2026-01-21 07:43:04.340040: Raw LLM Response length: 4035
+2026-01-21 07:43:04.340055: Raw LLM Response sample: {
+    "demand_agent": {
+        "summary": "Analysis of Q1 2026 demand forecasts across stores with total forecasted demand of 20,073 units and average forecast confidence of 83%",
+        "insights":
+2026-01-21 13:13:05.462671: Stored demand_agent for run RUN_20260121130523_ED5392
+2026-01-21 13:13:05.922191: Stored trend_agent for run RUN_20260121130523_ED5392
+2026-01-21 13:13:06.236638: Stored inventory_agent for run RUN_20260121130523_ED5392
+2026-01-21 13:13:06.556203: Stored pricing_agent for run RUN_20260121130523_ED5392
+2026-01-21 13:13:11.148261: Stored 200 insights for demand
+2026-01-21 13:13:14.821114: Stored 200 insights for trend
+2026-01-21 13:13:18.268235: Stored 200 insights for inventory
+2026-01-21 13:13:48.273579: Error storing detailed insights for replenishment: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)
+2026-01-21 13:14:18.278204: Error storing detailed insights for pricing: HTTPConnectionPool(host='localhost', port=8000): Read timed out. (read timeout=30)

@@ -15,7 +15,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .routes import stores, products, inventory, decisions, orchestrator, campaigns, agents, activity, trends
+from .routes import stores, products, inventory, decisions, orchestrator, campaigns, agents, activity, trends, demo
 
 # Configure logging
 logging.basicConfig(
@@ -73,6 +73,7 @@ app.include_router(campaigns.router, prefix="/campaigns", tags=["Campaigns"])
 app.include_router(agents.router) # Prefix is defined in the router itself
 app.include_router(activity.router, prefix="/activity", tags=["Activity"])
 app.include_router(trends.router, prefix="/trends", tags=["Trends"])
+app.include_router(demo.router, prefix="/demo", tags=["Demo"])
 
 
 @app.get("/", tags=["Health"])

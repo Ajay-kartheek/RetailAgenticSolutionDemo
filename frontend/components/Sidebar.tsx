@@ -12,6 +12,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Zap,
+  Database,
+  Loader2,
+  CheckCircle2,
 } from 'lucide-react';
 
 interface NavItem {
@@ -37,7 +40,32 @@ export default function Sidebar({
   isSystemOperational = true
 }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
+  const [seedStatus, setSeedStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const pathname = usePathname();
+
+  const handleSeedDemo = async () => {
+    if (isSeeding) return;
+    setIsSeeding(true);
+    setSeedStatus('idle');
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${API_URL}/demo/seed`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenario: 4 }),
+      });
+      if (!res.ok) throw new Error('Seed failed');
+      setSeedStatus('success');
+      setTimeout(() => setSeedStatus('idle'), 3000);
+    } catch (err) {
+      console.error('Seed error:', err);
+      setSeedStatus('error');
+      setTimeout(() => setSeedStatus('idle'), 3000);
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
   return (
     <motion.aside
@@ -133,6 +161,58 @@ export default function Sidebar({
           })}
         </div>
       </nav>
+
+      {/* Seed Demo Data Button */}
+      <div style={{ padding: '0 16px 8px' }} className="shrink-0">
+        <button
+          onClick={handleSeedDemo}
+          disabled={isSeeding}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: isCollapsed ? 'center' : 'flex-start',
+            gap: '10px',
+            padding: isCollapsed ? '10px' : '10px 12px',
+            borderRadius: '8px',
+            border: '1px solid rgba(99, 102, 241, 0.3)',
+            background: seedStatus === 'success'
+              ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.1))'
+              : seedStatus === 'error'
+                ? 'linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.1))'
+                : 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1))',
+            color: seedStatus === 'success' ? '#34d399' : seedStatus === 'error' ? '#f87171' : '#a5b4fc',
+            cursor: isSeeding ? 'wait' : 'pointer',
+            transition: 'all 0.2s ease',
+            fontSize: '13px',
+            fontWeight: 500,
+            opacity: isSeeding ? 0.7 : 1,
+          }}
+          className="hover:opacity-90"
+          title="Load Scenario 4: Comprehensive Retail Analysis"
+        >
+          {isSeeding ? (
+            <Loader2 size={16} className="animate-spin" style={{ flexShrink: 0 }} />
+          ) : seedStatus === 'success' ? (
+            <CheckCircle2 size={16} style={{ flexShrink: 0 }} />
+          ) : (
+            <Database size={16} style={{ flexShrink: 0 }} />
+          )}
+          <AnimatePresence mode="wait">
+            {!isCollapsed && (
+              <motion.span
+                initial={{ opacity: 0, x: -5 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -5 }}
+                transition={{ duration: 0.15 }}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {isSeeding ? 'Seeding...' : seedStatus === 'success' ? 'Data Loaded!' : seedStatus === 'error' ? 'Seed Failed' : 'Seed Demo Data'}
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </button>
+      </div>
 
       {/* Footer Status */}
       <div style={{ padding: '16px' }} className="shrink-0">

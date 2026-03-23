@@ -139,6 +139,7 @@ export const createSSEConnection = async (
 
     // Read the stream
     const readStream = async () => {
+      let buffer = '';
       try {
         while (true) {
           const { done, value } = await reader.read();
@@ -147,8 +148,11 @@ export const createSSEConnection = async (
             break;
           }
 
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk.split('\n');
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+
+          // Keep the last (potentially incomplete) line in the buffer
+          buffer = lines.pop() || '';
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
@@ -156,7 +160,7 @@ export const createSSEConnection = async (
                 const data = JSON.parse(line.slice(6));
                 onEvent(data as SSEEvent);
               } catch (e) {
-                console.error('Failed to parse SSE data:', e);
+                // If parsing fails, this might be a partial chunk - skip silently
               }
             }
           }

@@ -147,19 +147,30 @@ class DynamoDBClient:
         filter_expression: Any | None = None,
         limit: int | None = None,
     ) -> list[dict[str, Any]]:
-        """Scan all items from a table."""
+        """Scan all items from a table (handles pagination)."""
         try:
             table = self._get_table(table_name)
             kwargs: dict[str, Any] = {}
 
             if filter_expression:
                 kwargs["FilterExpression"] = filter_expression
-            if limit:
-                kwargs["Limit"] = limit
 
-            response = table.scan(**kwargs)
-            items = response.get("Items", [])
-            return [deserialize_item(item) for item in items]
+            all_items = []
+            while True:
+                response = table.scan(**kwargs)
+                items = response.get("Items", [])
+                all_items.extend([deserialize_item(item) for item in items])
+
+                # Check if we have enough items (if limit specified)
+                if limit and len(all_items) >= limit:
+                    return all_items[:limit]
+
+                # Check for more pages
+                if "LastEvaluatedKey" not in response:
+                    break
+                kwargs["ExclusiveStartKey"] = response["LastEvaluatedKey"]
+
+            return all_items
         except ClientError as e:
             print(f"Error scanning {table_name}: {e}")
             return []
