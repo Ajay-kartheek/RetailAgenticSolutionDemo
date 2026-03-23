@@ -147,12 +147,13 @@ Provide:
         """Save recommendations as decisions in DynamoDB."""
         for rec in recommendations:
             try:
-                # Generate unique decision ID if missing
-                decision_id = rec.get("id") or f"PRICE_{datetime.utcnow().strftime('%Y%m%d')}_{rec.get('product_id')}"
+                # Deterministic ID: same product always produces same key
+                # DynamoDB put_item will overwrite on re-run (natural upsert)
+                decision_id = f"PRICE_{rec.get('product_id')}"
 
                 decision_record = {
                     "decision_id": decision_id,
-                    "status": "pending",  # Pricing changes usually require approval
+                    "status": "pending_approval",  # Pricing changes require approval
                     "timestamp": datetime.utcnow().isoformat(),
                     "decision_type": "pricing_" + (rec.get("recommendation_type") or "change"),
                     "agent_id": self.agent_id,

@@ -180,41 +180,14 @@ Provide:
         return results
         
     def _save_decisions(self, plans: list[dict]):
-        """Save plans as decisions in DynamoDB."""
-        # Get existing pending decisions to avoid duplicates
-        try:
-            pending_decisions = self.db_client.get_pending_decisions()
-        except Exception:
-            pending_decisions = []
-            
+        """Save plans as decisions in DynamoDB (deterministic IDs = natural upsert)."""
         for plan in plans:
             try:
-                decision_id = plan.get("plan_id")
-                # Ensure we have a decision_id
-                if not decision_id:
-                    import uuid
-                    decision_id = f"PLAN_{datetime.utcnow().strftime('%Y%m%d')}_{str(uuid.uuid4())[:8]}"
-
-                # Check for duplicates
-                # Duplicate if: Same product_id AND Same target_store_id AND Status is Pending
-                is_duplicate = False
                 product_id = plan.get("product_id")
                 target_store = plan.get("target_store_id")
-                
-                for existing in pending_decisions:
-                    existing_data = existing.get("data", {})
-                    # Replenishment decisions usually map 1:1 to plan
-                    if (
-                        existing_data.get("product_id") == product_id and
-                        existing_data.get("target_store_id") == target_store and
-                        "replenishment" in existing.get("decision_type", "")
-                    ):
-                         print(f"Skipping duplicate replenishment plan for {product_id} at {target_store}")
-                         is_duplicate = True
-                         break
-                
-                if is_duplicate:
-                    continue
+                # Deterministic ID: same product+store always produces same key
+                # DynamoDB put_item will overwrite on re-run (natural upsert)
+                decision_id = f"REPL_{product_id}_{target_store}"
 
                 decision_record = {
                     "decision_id": decision_id,
