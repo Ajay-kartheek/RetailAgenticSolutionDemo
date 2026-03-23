@@ -73,72 +73,18 @@ class ReplenishmentAgent:
             "recommendations": [],
         }
 
-        # Get active replenishment decisions to avoid duplicates
-        active_replenishment_decisions = self.db_client.get_active_decisions(decision_type="replenishment", days=30)
-        # Also get pending decisions
-        try:
-            pending_decisions = self.db_client.get_pending_decisions()
-            pending_replenishment = [d for d in pending_decisions if "replenishment" in d.get("decision_type", "")]
-        except:
-            pending_replenishment = []
-        
-        # Combine active + pending
-        all_active = active_replenishment_decisions + pending_replenishment
-        
-        products_with_active_transfers = set()
-        active_transfers_context = []
-        
-        for decision in all_active:
-            data = decision.get("data", {})
-            product_id = data.get("product_id")
-            target_store = data.get("target_store_id")
-            if product_id and target_store:
-                # Key is product+store combination
-                products_with_active_transfers.add(f"{product_id}_{target_store}")
-                active_transfers_context.append({
-                    "product_name": data.get("product_name"),
-                    "product_id": product_id,
-                    "target_store": target_store,
-                    "source_store": data.get("source_store_id"),
-                    "quantity": data.get("quantity"),
-                    "status": decision.get("status")
-                })
-        
-        print(f"[Replenishment Agent] Found {len(products_with_active_transfers)} product-store combinations with active transfers")
-
         # Get REAL replenishment needs from DynamoDB (limited for performance)
         needs_data = get_all_replenishment_needs(
             inventory_data=inventory_data,
             forecast_period=forecast_period,
         )
 
-        # Filter out product-store combinations that already have active transfers
-        all_plans = needs_data.get("plans", [])
-        plans = [
-            plan for plan in all_plans 
-            if f"{plan.get('product_id')}_{plan.get('target_store_id')}" not in products_with_active_transfers
-        ][:50]  # Limit to 50 plans for demo
-        
-        skipped_count = len(all_plans) - len([p for p in all_plans if f"{p.get('product_id')}_{p.get('target_store_id')}" not in products_with_active_transfers])
-        if skipped_count > 0:
-            print(f"[Replenishment Agent] Skipped {skipped_count} plans with existing active/pending transfers")
+        # Limit to 50 plans for demo — deterministic IDs handle re-run dedup
+        plans = needs_data.get("plans", [])[:50]
 
-        # Build task for LLM to analyze REAL replenishment needs
-        import json
-        
-        # Include context about existing active transfers
-        active_transfers_text = ""
-        if active_transfers_context:
-            active_transfers_text = f"""
-**IMPORTANT - Existing Active/Pending Transfers (DO NOT create new plans for these):**
-{json.dumps(active_transfers_context[:5], indent=2)}
-
-These product-store combinations already have approved/pending transfers. Skip them.
-"""
-        
         task = f"""Analyze replenishment needs for SK Brands retail stores for period {forecast_period}.
-{active_transfers_text}
-**New Replenishment Plans (product-stores without active transfers):**
+
+**Replenishment Plans:**
 {json.dumps(plans, indent=2)}
 
 **Inventory Context (from Inventory Agent):**

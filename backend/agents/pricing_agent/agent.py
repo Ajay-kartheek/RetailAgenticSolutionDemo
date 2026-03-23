@@ -50,61 +50,22 @@ class PricingAgent:
             "insights": [],
         }
 
-        # Get active pricing decisions to avoid duplicates
-        active_pricing_decisions = self.db_client.get_active_decisions(decision_type="pricing", days=30)
-        products_with_active_changes = set()
-        active_changes_context = []
-        
-        for decision in active_pricing_decisions:
-            data = decision.get("data", {})
-            product_id = data.get("product_id")
-            if product_id:
-                products_with_active_changes.add(product_id)
-                active_changes_context.append({
-                    "product_name": data.get("product_name"),
-                    "product_id": product_id,
-                    "current_price": data.get("current_price"),
-                    "new_price": data.get("recommended_price"),
-                    "valid_until": data.get("valid_until"),
-                    "status": decision.get("status")
-                })
-        
-        print(f"[Pricing Agent] Found {len(products_with_active_changes)} products with active price changes")
-
-        # Get REAL pricing recommendations from DynamoDB (limited for performance)
+        # Get REAL pricing recommendations from DynamoDB
         pricing_data = get_all_pricing_recommendations(
             inventory_data=inventory_data,
             trend_data=trend_data,
             forecast_period=forecast_period,
         )
 
-        # Filter out products that already have active price changes
-        all_recommendations = pricing_data.get("recommendations", [])
-        recommendations = [
-            rec for rec in all_recommendations 
-            if rec.get("product_id") not in products_with_active_changes
-        ][:50]  # Increased limit from 10 to 50
-        
-        skipped_count = len(all_recommendations) - len([r for r in all_recommendations if r.get("product_id") not in products_with_active_changes])
-        if skipped_count > 0:
-            print(f"[Pricing Agent] Skipped {skipped_count} products with existing active price changes")
+        # Limit to 50 recommendations — deterministic IDs handle re-run dedup
+        recommendations = pricing_data.get("recommendations", [])[:50]
 
-        # Build task for LLM to analyze REAL pricing opportunities
+        # Build task for LLM
         import json
         
-        # Include context about existing active changes
-        active_changes_text = ""
-        if active_changes_context:
-            active_changes_text = f"""
-**IMPORTANT - Existing Active Price Changes (DO NOT recommend changes for these products):**
-{json.dumps(active_changes_context[:5], indent=2)}
-
-These products already have approved/executed price changes. Skip them in your analysis.
-"""
-        
         task = f"""Analyze pricing and promotion opportunities for SK Brands retail stores for period {forecast_period}.
-{active_changes_text}
-**New Pricing Recommendations (products without active changes):**
+
+**Pricing Recommendations:**
 {json.dumps(recommendations, indent=2)}
 
 **Context:**
